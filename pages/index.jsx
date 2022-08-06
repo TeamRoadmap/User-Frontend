@@ -1,6 +1,6 @@
 import Head from 'next/head';
 import Layout from '../shared/components/layout';
-import { Header } from '../landing-page/components';
+import { Header , Footer  , About} from '../landing-page/components';
 export default function Home() {
   return (
     <Layout>
@@ -10,6 +10,8 @@ export default function Home() {
 				<link rel="icon" href="/favicon.ico" />
 			</Head>
       <Header />
+      <About />
+      <Footer />
     </Layout>
   )
 }
