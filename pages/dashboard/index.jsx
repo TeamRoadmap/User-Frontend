@@ -1,6 +1,15 @@
 import Head from "next/head";
 import { Layout } from "../../dashboard/components";
-import { Grid, Heading, SimpleGrid, Stack, Text } from "@chakra-ui/react";
+import {
+  Grid,
+  Heading,
+  SimpleGrid,
+  Stack,
+  Text,
+  GridItem,
+  Flex,
+  useColorModeValue,
+} from "@chakra-ui/react";
 
 const data = [
   {
@@ -82,7 +91,125 @@ export default function Home() {
             Krishanu Dutta!
           </Text>{" "}
         </Heading>
-        <Text>Browse Interactive courses created with our top creator which allows you to follow along with ease.</Text>
+        <Text>
+          Browse Interactive courses created with our top creator which allows
+          you to follow along with ease.
+        </Text>
+        <Grid
+          templateColumns={{ base: "repeat(1, 1fr)", md: "repeat(2, 1fr)" }}
+          gap={6}
+        >
+          <Flex
+            w="100%"
+            h="fit-content"
+            rounded="8px"
+            bg={useColorModeValue("white", "gray.800")}
+            boxShadow={"md"}
+            direction={{ base: "column", md: "row" }}
+            p="1.5rem"
+            align="center"
+            gap="2rem"
+          >
+            <img src="/images/information-square.svg" />
+            <Flex
+              direction="column"
+              align={{ base: "center", md: "start" }}
+            >
+              <Text>Frontend</Text>
+              <Text>
+                Discover the concepts, reference, guides and tutorials.
+              </Text>
+            </Flex>
+          </Flex>
+          <Flex
+            w="100%"
+            h="fit-content"
+            rounded="8px"
+            bg={useColorModeValue("white", "gray.800")}
+            boxShadow={"md"}
+            direction={{ base: "column", md: "row" }}
+            p="1.5rem"
+            align="center"
+            gap="2rem"
+          >
+            <img src="/images/information-square.svg" />
+            <Flex
+              direction="column"
+              align={{ base: "center", md: "start" }}
+            >
+              <Text>Frontend</Text>
+              <Text>
+                Discover the concepts, reference, guides and tutorials.
+              </Text>
+            </Flex>
+          </Flex>
+          <Flex
+            w="100%"
+            h="fit-content"
+            rounded="8px"
+            bg={useColorModeValue("white", "gray.800")}
+            boxShadow={"md"}
+            direction={{ base: "column", md: "row" }}
+            p="1.5rem"
+            align="center"
+            gap="2rem"
+          >
+            <img src="/images/information-square.svg" />
+            <Flex
+              direction="column"
+              align={{ base: "center", md: "start" }}
+            >
+              <Text>Frontend</Text>
+              <Text>
+                Discover the concepts, reference, guides and tutorials.
+              </Text>
+            </Flex>
+          </Flex>
+          <Flex
+            w="100%"
+            h="fit-content"
+            rounded="8px"
+            bg={useColorModeValue("white", "gray.800")}
+            boxShadow={"md"}
+            direction={{ base: "column", md: "row" }}
+            p="1.5rem"
+            align="center"
+            gap="2rem"
+          >
+            <img src="/images/information-square.svg" />
+            <Flex
+              direction="column"
+              align={{ base: "center", md: "start" }}
+            >
+              <Text>Frontend</Text>
+              <Text>
+                Discover the concepts, reference, guides and tutorials.
+              </Text>
+            </Flex>
+          </Flex>
+          <Flex
+            w="100%"
+            h="fit-content"
+            rounded="8px"
+            bg={useColorModeValue("white", "gray.800")}
+            boxShadow={"md"}
+            direction={{ base: "column", md: "row" }}
+            p="1.5rem"
+            align="center"
+            gap="2rem"
+          >
+            <img src="/images/information-square.svg" />
+            <Flex
+              direction="column"
+              align={{ base: "center", md: "start" }}
+            >
+              <Text>Frontend</Text>
+              <Text>
+                Discover the concepts, reference, guides and tutorials.
+              </Text>
+            </Flex>
+          </Flex>
+        </Grid>
       </Stack>
     </Layout>
   );
