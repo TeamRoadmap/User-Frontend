@@ -1,5 +1,6 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import userReducer from "./feature/user/user-slice";
+import courseReducer from "./feature/course/course-slice";
 import storage from "redux-persist/lib/storage";
 import { persistReducer, persistStore } from "redux-persist";
 // import autoMergeLevel2 from "redux-persist/lib/stateReconciler/autoMergeLevel2";
@@ -13,7 +14,7 @@ const persistConfig = {
     return Promise.resolve(state);
   },
 };
-const reducers = combineReducers({ user: userReducer });
+const reducers = combineReducers({ user: userReducer, course: courseReducer });
 const persistedReducer = persistReducer(persistConfig, reducers);
 export const store = configureStore({
   reducer: persistedReducer,

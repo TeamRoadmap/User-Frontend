@@ -9,7 +9,15 @@ import {
   GridItem,
   Flex,
   useColorModeValue,
+  Skeleton,
+  IconButton,
 } from "@chakra-ui/react";
+import { IoMdInformation } from "react-icons/io";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import NextLink from "next/link";
+import { BeatLoader } from "react-spinners";
 
 const data = [
   {
@@ -59,6 +67,30 @@ const data2 = [
 ];
 
 export default function Home() {
+  const { token, user } = useSelector((state) => state.user);
+  const [types, setTypes] = useState();
+  const [loading, setLoading] = useState(true);
+  const bg = useColorModeValue("white", "gray.800");
+
+  const getType = async () => {
+    setLoading(true);
+    const res = await axios.get(
+      `https://roadmap-backend-host.herokuapp.com/api/v1/coursetype`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    setTypes(res.data.data.courseTypes);
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    getType();
+    console.log(types);
+  }, []);
+
   return (
     <Layout>
       <Head>
@@ -88,128 +120,56 @@ export default function Home() {
             color={"purple.600"}
             as={"span"}
           >
-            Krishanu Dutta!
+            {user.name}!
           </Text>{" "}
         </Heading>
         <Text>
           Browse Interactive courses created with our top creator which allows
           you to follow along with ease.
         </Text>
-        <Grid
-          templateColumns={{ base: "repeat(1, 1fr)", md: "repeat(2, 1fr)" }}
-          gap={6}
-        >
-          <Flex
-            w="100%"
-            h="fit-content"
-            rounded="8px"
-            bg={useColorModeValue("white", "gray.800")}
-            boxShadow={"md"}
-            direction={{ base: "column", md: "row" }}
-            p="1.5rem"
-            align="center"
-            gap="2rem"
+        <Skeleton isLoaded={!loading}>
+          <Grid
+            templateColumns={{ base: "repeat(1, 1fr)", md: "repeat(2, 1fr)" }}
+            gap={6}
           >
-            <img src="/images/information-square.svg" />
-            <Flex
-              direction="column"
-              align={{ base: "center", md: "start" }}
-            >
-              <Text>Frontend</Text>
-              <Text>
-                Discover the concepts, reference, guides and tutorials.
-              </Text>
-            </Flex>
-          </Flex>
-          <Flex
-            w="100%"
-            h="fit-content"
-            rounded="8px"
-            bg={useColorModeValue("white", "gray.800")}
-            boxShadow={"md"}
-            direction={{ base: "column", md: "row" }}
-            p="1.5rem"
-            align="center"
-            gap="2rem"
-          >
-            <img src="/images/information-square.svg" />
-            <Flex
-              direction="column"
-              align={{ base: "center", md: "start" }}
-            >
-              <Text>Frontend</Text>
-              <Text>
-                Discover the concepts, reference, guides and tutorials.
-              </Text>
-            </Flex>
-          </Flex>
-          <Flex
-            w="100%"
-            h="fit-content"
-            rounded="8px"
-            bg={useColorModeValue("white", "gray.800")}
-            boxShadow={"md"}
-            direction={{ base: "column", md: "row" }}
-            p="1.5rem"
-            align="center"
-            gap="2rem"
-          >
-            <img src="/images/information-square.svg" />
-            <Flex
-              direction="column"
-              align={{ base: "center", md: "start" }}
-            >
-              <Text>Frontend</Text>
-              <Text>
-                Discover the concepts, reference, guides and tutorials.
-              </Text>
-            </Flex>
-          </Flex>
-          <Flex
-            w="100%"
-            h="fit-content"
-            rounded="8px"
-            bg={useColorModeValue("white", "gray.800")}
-            boxShadow={"md"}
-            direction={{ base: "column", md: "row" }}
-            p="1.5rem"
-            align="center"
-            gap="2rem"
-          >
-            <img src="/images/information-square.svg" />
-            <Flex
-              direction="column"
-              align={{ base: "center", md: "start" }}
-            >
-              <Text>Frontend</Text>
-              <Text>
-                Discover the concepts, reference, guides and tutorials.
-              </Text>
-            </Flex>
-          </Flex>
-          <Flex
-            w="100%"
-            h="fit-content"
-            rounded="8px"
-            bg={useColorModeValue("white", "gray.800")}
-            boxShadow={"md"}
-            direction={{ base: "column", md: "row" }}
-            p="1.5rem"
-            align="center"
-            gap="2rem"
-          >
-            <img src="/images/information-square.svg" />
-            <Flex
-              direction="column"
-              align={{ base: "center", md: "start" }}
-            >
-              <Text>Frontend</Text>
-              <Text>
-                Discover the concepts, reference, guides and tutorials.
-              </Text>
-            </Flex>
-          </Flex>
-        </Grid>
+            {loading && <BeatLoader color="#6B46C1" />}
+            {types?.map((type) => {
+              return (
+                <NextLink
+                  key={type.id}
+                  href={`/dashboard/courses/${type.public_id}`}
+                >
+                  <Flex
+                    w="100%"
+                    key={type.id}
+                    h="fit-content"
+                    rounded="8px"
+                    bg={bg}
+                    boxShadow={"md"}
+                    direction={{ base: "column", md: "row" }}
+                    p="1.5rem"
+                    align="center"
+                    gap="2rem"
+                  >
+                    <IconButton
+                      color="purple.600"
+                      icon={<IoMdInformation size="2rem" />}
+                    />
+                    <Flex
+                      direction="column"
+                      align={{ base: "center", md: "start" }}
+                    >
+                      <Text casing="capitalize">{type.name}</Text>
+                      {/* <Text>
+                  Discover the concepts, reference, guides and tutorials.
+                </Text> */}
+                    </Flex>
+                  </Flex>
+                </NextLink>
+              );
+            })}
+          </Grid>
+        </Skeleton>
       </Stack>
     </Layout>
   );
