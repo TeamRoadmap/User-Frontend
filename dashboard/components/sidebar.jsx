@@ -141,11 +141,11 @@ const Sidebar = () => {
         <NavLink to="/dashboard">
           <NavItem icon={AiOutlineHome}>Home</NavItem>
         </NavLink>
-        <NavLink to="/dashboard/course">
-          <NavItem icon={AiOutlineContainer}>LeaderBoard</NavItem>
+        <NavLink to="/dashboard/leaderboard">
+          <NavItem icon={AiOutlineContainer}>Leaderboard</NavItem>
         </NavLink>
-        <NavLink to="/dashboard/statistics">
-          <NavItem icon={AiOutlineFund}>Bookmarked</NavItem>
+        <NavLink to="/dashboard/bookmarks">
+          <NavItem icon={AiOutlineFund}>Bookmarks</NavItem>
         </NavLink>
         <NavLink to="/dashboard/settings">
           <NavItem icon={AiOutlineSetting}>Settings</NavItem>
