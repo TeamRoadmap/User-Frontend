@@ -20,14 +20,34 @@ import {
   AiOutlineRight,
   AiOutlineSetting,
 } from "react-icons/ai";
-import { FiMoon, FiSun } from "react-icons/fi";
+import { FiLogOut, FiMoon, FiSun } from "react-icons/fi";
 import React from "react";
 import NavLink from "../../shared/components/nav-link";
+import { useDispatch } from "react-redux";
+import { useRouter } from "next/router";
+import { signOut } from "firebase/auth";
+import { auth } from "../../shared/lib/firebase";
 
 const Sidebar = () => {
   const { colorMode, toggleColorMode } = useColorMode();
   const sidebar = useDisclosure();
   const color = useColorModeValue("gray.600", "gray.300");
+  const dispatch = useDispatch();
+
+  const router = useRouter();
+
+  const onLogOut = (e) => {
+    e.preventDefault();
+    signOut(auth)
+      .then(() => {
+        console.log("signout successful");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    dispatch({ type: "user/logout" });
+    router.push("/login", undefined, { shallow: true });
+  };
 
   const NavItem = (props) => {
     const { icon, children, ...rest } = props;
@@ -136,6 +156,14 @@ const Sidebar = () => {
           onClick={toggleColorMode}
         >
           {colorMode === "light" ? <FiMoon /> : <FiSun color="#A0AEC0" />}
+        </Button>
+        <Button
+          m="6"
+          leftIcon={<FiLogOut />}
+          onClick={onLogOut}
+          color={color}
+        >
+          Log Out
         </Button>
       </Flex>
     </Box>
