@@ -40,7 +40,6 @@ export const Course = () => {
           },
         }
       );
-      console.log(res.data);
       setCourseDetail(res.data.data);
       // setCourseDetail(res.data.data.courses);
       setLoading(false);

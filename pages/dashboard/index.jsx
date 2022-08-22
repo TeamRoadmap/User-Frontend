@@ -88,7 +88,6 @@ export default function Home() {
 
   useEffect(() => {
     getType();
-    console.log(types);
   }, []);
 
   return (

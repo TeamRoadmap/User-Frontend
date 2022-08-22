@@ -41,7 +41,6 @@ export default function Bookmarks() {
 
   useEffect(() => {
     getBookmarks();
-    console.log(bookmarks);
   }, []);
 
   return (

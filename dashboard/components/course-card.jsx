@@ -55,10 +55,7 @@ const CourseCard = ({ title, id, description, public_id, genre_id }) => {
           }
         );
         dispatch({ type: "course/setVote", payload: data });
-        console.log(res);
-      } catch (err) {
-        console.log(err);
-      }
+      } catch (err) {}
     } else {
       try {
         const res = await axios.patch(
@@ -73,7 +70,6 @@ const CourseCard = ({ title, id, description, public_id, genre_id }) => {
           }
         );
         dispatch({ type: "course/setVote", payload: data });
-        console.log(res);
       } catch (err) {
         console.log(err);
       }
@@ -91,7 +87,6 @@ const CourseCard = ({ title, id, description, public_id, genre_id }) => {
         }
       );
       // dispatch({ type: "course/setVote", payload: data });
-      console.log(res);
     } catch (err) {
       console.log(err);
     }
