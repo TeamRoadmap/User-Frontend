@@ -113,7 +113,6 @@ export const Course = () => {
       }
       if (domNode instanceof Element && domNode.name === "iframe") {
         const { src, alt } = domNode.attribs;
-        console.log(domNode);
         return (
           <iframe
             width="260"

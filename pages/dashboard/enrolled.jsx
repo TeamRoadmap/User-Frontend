@@ -85,18 +85,18 @@ export default function Enrolled() {
               templateColumns={{ base: "repeat(1, 1fr)", md: "repeat(4, 1fr)" }}
               gap={6}
             >
-              {enrolled?.map((bookmark) => {
+              {enrolled?.map((enrolled) => {
                 return (
                   <GridItem
                     colSpan={2}
-                    key={bookmark.course.id}
+                    key={enrolled.course.id}
                   >
                     <NextLink
-                      href={`/dashboard/courses/course/${bookmark?.course.public_id}`}
+                      href={`/dashboard/courses/course/${enrolled?.course.public_id}`}
                     >
                       <Flex
                         w="100%"
-                        key={bookmark.course.id}
+                        key={enrolled.course.id}
                         h="fit-content"
                         rounded="8px"
                         bg={bg}
@@ -115,12 +115,9 @@ export default function Enrolled() {
                           align={{ base: "center", md: "start" }}
                         >
                           <Text casing="capitalize">
-                            {bookmark.course.title}
+                            {enrolled.course.title}
                           </Text>
-                          <Text>
-                            Discover the concepts, reference, guides and
-                            tutorials.
-                          </Text>
+                          <Text>{enrolled.course.description}</Text>
                         </Flex>
                       </Flex>
                     </NextLink>

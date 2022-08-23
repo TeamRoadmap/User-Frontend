@@ -97,7 +97,6 @@ const CourseCard = ({ title, id, description, public_id, genre_id }) => {
           },
         }
       );
-      console.log(res.data.data.bookmark.course_id);
       // dispatch({ type: "course/setVote", payload: data });
     } catch (err) {
       console.log(err);
@@ -117,7 +116,6 @@ const CourseCard = ({ title, id, description, public_id, genre_id }) => {
           },
         }
       );
-      console.log(res.data.data);
       // dispatch({ type: "course/setVote", payload: data });
     } catch (err) {
       console.log(err);

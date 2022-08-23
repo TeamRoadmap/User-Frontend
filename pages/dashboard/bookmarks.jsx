@@ -117,10 +117,7 @@ export default function Bookmarks() {
                           <Text casing="capitalize">
                             {bookmark.course.title}
                           </Text>
-                          <Text>
-                            Discover the concepts, reference, guides and
-                            tutorials.
-                          </Text>
+                          <Text>{bookmark.course.description}</Text>
                         </Flex>
                       </Flex>
                     </NextLink>
