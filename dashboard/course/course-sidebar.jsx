@@ -24,11 +24,8 @@ import {
 } from "react-icons/ai";
 import { FiLogOut, FiMoon, FiSkipBack, FiSun } from "react-icons/fi";
 import React from "react";
-import NavLink from "../../shared/components/nav-link";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
-import { signOut } from "firebase/auth";
-import { auth } from "../../shared/lib/firebase";
 import { useState } from "react";
 import axios from "axios";
 
@@ -42,20 +39,8 @@ const CourseSidebar = ({ data }) => {
   const color = useColorModeValue("gray.600", "gray.300");
   const selectedColor = useColorModeValue("purple.600", "purple.600");
   const dispatch = useDispatch();
-  console.log(section);
+
   const router = useRouter();
-  const onLogOut = (e) => {
-    e.preventDefault();
-    signOut(auth)
-      .then(() => {
-        console.log("signout successful");
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-    dispatch({ type: "user/logout" });
-    router.push("/login", undefined, { shallow: true });
-  };
 
   const getSectionData = async (sectionId) => {
     try {

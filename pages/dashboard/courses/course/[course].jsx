@@ -39,6 +39,10 @@ export const Course = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   const { course } = router.query;
+  const contentColor = useColorModeValue("gray.700", "gray.200");
+
+  const linkColor = useColorModeValue("purple.500", "purple.200");
+  const codeColor = useColorModeValue("gray.100", "gray.700");
 
   const options = {
     replace: (domNode) => {
@@ -59,12 +63,11 @@ export const Course = () => {
       }
       if (domNode instanceof Element && domNode.name === "h1") {
         const props = attributesToProps(domNode.attribs);
-        console.log();
         return (
           <Heading
             as="h1"
             fontSize="1.2rem"
-            color={useColorModeValue("gray.700", "gray.200")}
+            color={contentColor}
           >
             {domNode.children[0].data}
           </Heading>
@@ -72,12 +75,11 @@ export const Course = () => {
       }
       if (domNode instanceof Element && domNode.name === "h2") {
         const props = attributesToProps(domNode.attribs);
-        console.log();
         return (
           <Heading
             as="h1"
             fontSize="1rem"
-            color={useColorModeValue("gray.700", "gray.200")}
+            color={contentColor}
           >
             {domNode.children[0].data}
           </Heading>
@@ -85,13 +87,12 @@ export const Course = () => {
       }
       if (domNode instanceof Element && domNode.name === "a") {
         const props = attributesToProps(domNode.attribs);
-        console.log(domNode);
         return (
           <Link
             {...props}
             as="a"
             fontSize="1rem"
-            color={useColorModeValue("purple.500", "purple.200")}
+            color={linkColor}
           >
             {domNode.children[0].data}
           </Link>
@@ -99,10 +100,9 @@ export const Course = () => {
       }
       if (domNode instanceof Element && domNode.name === "pre") {
         const props = attributesToProps(domNode.attribs);
-        console.log(domNode);
         return (
           <Code
-            bg={useColorModeValue("gray.100", "gray.700")}
+            bg={codeColor}
             px="6"
             py="4"
             rounded="8"
@@ -113,8 +113,6 @@ export const Course = () => {
       }
     },
   };
-
-  console.log(course);
 
   const getCourseDetail = async () => {
     setLoading(true);
@@ -127,7 +125,6 @@ export const Course = () => {
           },
         }
       );
-      console.log(res.data.data);
       setCourseDetail(res.data.data);
       dispatch({ type: "course/setCourse", payload: res.data.data.course });
       dispatch({ type: "course/setSection", payload: res.data.data.sections });
