@@ -7,6 +7,7 @@ const initialState = {
   section: [],
   sectionData: [],
   courses: [],
+  sectionProgress: [],
   // contain all the courses's data in an array of object.
 };
 const courseSlice = createSlice({
@@ -33,6 +34,9 @@ const courseSlice = createSlice({
     },
     setCourses: (state, action) => {
       state.courses = action.payload;
+    },
+    setSectionProgress: (state, action) => {
+      state.sectionProgress = action.payload;
     },
   },
 });
