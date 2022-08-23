@@ -40,6 +40,7 @@ export const Courses = () => {
         }
       );
       setCourseDetail(res.data.data.courses);
+      console.log(res.data.data.courses);
       setLoading(false);
     } catch (err) {
       setError("error occured");

@@ -10,23 +10,110 @@ import {
   Stack,
   Text,
   Skeleton,
+  useColorModeValue,
+  Link,
+  Code,
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
-import { Layout } from "../../../../dashboard/components";
-import { BeatLoader } from "react-spinners";
-import CourseCard from "../../../../dashboard/components/course-card";
+import CourseLayout from "../../../../dashboard/course/course-layout";
+
+import parse, {
+  attributesToProps,
+  domToReact,
+  Element,
+} from "html-react-parser";
+
+import Image from "next/image";
+
+import Head from "next/head";
 
 export const Course = () => {
   const notify = () => toast("Saved");
   const { token } = useSelector((state) => state.user);
+  const { sectionData } = useSelector((state) => state.course);
   const [courseDetail, setCourseDetail] = useState();
   const [error, setError] = useState();
   const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
   const router = useRouter();
   const { course } = router.query;
+
+  const options = {
+    replace: (domNode) => {
+      // Look for an img tag and replace it with Image.
+      if (domNode instanceof Element && domNode.name === "img") {
+        const { src, alt } = domNode.attribs;
+
+        return (
+          <Image
+            src={`${src}`}
+            width={`200px`}
+            height={`200px`}
+            alt={alt}
+            layout="intrinsic"
+            objectFit="cover"
+          />
+        );
+      }
+      if (domNode instanceof Element && domNode.name === "h1") {
+        const props = attributesToProps(domNode.attribs);
+        console.log();
+        return (
+          <Heading
+            as="h1"
+            fontSize="1.2rem"
+            color={useColorModeValue("gray.700", "gray.200")}
+          >
+            {domNode.children[0].data}
+          </Heading>
+        );
+      }
+      if (domNode instanceof Element && domNode.name === "h2") {
+        const props = attributesToProps(domNode.attribs);
+        console.log();
+        return (
+          <Heading
+            as="h1"
+            fontSize="1rem"
+            color={useColorModeValue("gray.700", "gray.200")}
+          >
+            {domNode.children[0].data}
+          </Heading>
+        );
+      }
+      if (domNode instanceof Element && domNode.name === "a") {
+        const props = attributesToProps(domNode.attribs);
+        console.log(domNode);
+        return (
+          <Link
+            {...props}
+            as="a"
+            fontSize="1rem"
+            color={useColorModeValue("purple.500", "purple.200")}
+          >
+            {domNode.children[0].data}
+          </Link>
+        );
+      }
+      if (domNode instanceof Element && domNode.name === "pre") {
+        const props = attributesToProps(domNode.attribs);
+        console.log(domNode);
+        return (
+          <Code
+            bg={useColorModeValue("gray.100", "gray.700")}
+            px="6"
+            py="4"
+            rounded="8"
+          >
+            {domToReact(domNode.children)}
+          </Code>
+        );
+      }
+    },
+  };
+
   console.log(course);
 
   const getCourseDetail = async () => {
@@ -40,7 +127,10 @@ export const Course = () => {
           },
         }
       );
+      console.log(res.data.data);
       setCourseDetail(res.data.data);
+      dispatch({ type: "course/setCourse", payload: res.data.data.course });
+      dispatch({ type: "course/setSection", payload: res.data.data.sections });
       // setCourseDetail(res.data.data.courses);
       setLoading(false);
     } catch (err) {
@@ -62,12 +152,24 @@ export const Course = () => {
   //   notify();
   // };
   useEffect(() => {
-    // dispatch({ type: "course/setCourseId", payload: courseId });
     getCourseDetail();
+    dispatch({ type: "course/resetSection" });
   }, []);
 
   return (
-    <Layout>
+    <CourseLayout data={courseDetail}>
+      <Head>
+        <link
+          rel="stylesheet"
+          href={useColorModeValue(
+            "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/base16/google-light.min.css",
+            "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/github-dark.min.css"
+          )}
+          integrity="sha512-rO+olRTkcf304DQBxSWxln8JXCzTHlKnIdnMUwYvQa9/Jd4cQaNkItIUj6Z4nvW1dqK0SKXLbn9h4KwZTNtAyw=="
+          crossOrigin="anonymous"
+          referrerpolicy="no-referrer"
+        />
+      </Head>
       <Flex
         m="6"
         gap="4"
@@ -78,20 +180,79 @@ export const Course = () => {
           fontSize="3xl"
           variant="h1"
           casing="capitalize"
+          fontWeight="600"
         >
-          {courseDetail?.course?.title}
+          Course Title- {courseDetail?.course?.title}
         </Text>
         <Text
-          fontSize="lg"
+          fontSize="xl"
           variant="h1"
           casing="capitalize"
+          fontWeight="400"
         >
-          Course description - {courseDetail?.course?.description}
+          Course description -{courseDetail?.course?.description}
         </Text>
       </Flex>
-    </Layout>
+      <Box
+        my="12"
+        mx="6"
+        p="8"
+      >
+        {sectionData == "" && (
+          <Text
+            fontSize="xl"
+            textAlign="center"
+          >
+            Start exploring the course through sections!
+          </Text>
+        )}
+        {sectionData != "" && (
+          <>
+            <Flex
+              gap="6"
+              direction="column"
+            >
+              <Flex
+                gap="2"
+                direction="column"
+              >
+                <Text
+                  as="h1"
+                  fontSize="1.4rem"
+                  fontWeight="700"
+                >
+                  {" "}
+                  Title: {sectionData?.title}
+                </Text>
+                <Text
+                  as="h1"
+                  fontSize="1.2rem"
+                  fontWeight="400"
+                >
+                  Description: {sectionData?.description}
+                </Text>
+              </Flex>
+              <Flex
+                gap="6"
+                direction="column"
+              >
+                <Box
+                  my="2"
+                  bg="white"
+                  rounded="8"
+                  _dark={{ bg: "gray.900" }}
+                  p="8"
+                >
+                  {parse(`${sectionData?.content}`, options)}
+                </Box>
+              </Flex>
+            </Flex>
+          </>
+        )}
+      </Box>
+    </CourseLayout>
   );
-};
+};;;;;
 
 export default Course;
 

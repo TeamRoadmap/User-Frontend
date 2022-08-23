@@ -82,6 +82,7 @@ export default function Home() {
         },
       }
     );
+    console.log(res.data.data.courseTypes);
     setTypes(res.data.data.courseTypes);
     setLoading(false);
   };
