@@ -19,28 +19,28 @@ import { useSelector } from "react-redux";
 import NextLink from "next/link";
 import { BeatLoader } from "react-spinners";
 
-export default function Bookmarks() {
+export default function Enrolled() {
   const { token, user } = useSelector((state) => state.user);
-  const [bookmarks, setBookmarks] = useState();
+  const [enrolled, setEnrolled] = useState();
   const [loading, setLoading] = useState(true);
   const bg = useColorModeValue("white", "gray.800");
 
-  const getBookmarks = async () => {
+  const getEnrolled = async () => {
     setLoading(true);
     const res = await axios.get(
-      `https://roadmap-backend-host.herokuapp.com/api/v1//user/bookmarks`,
+      `https://roadmap-backend-host.herokuapp.com/api/v1//user/enrollments`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       }
     );
-    setBookmarks(res.data.data.bookmarks);
+    setEnrolled(res.data.data.enrollments);
     setLoading(false);
   };
 
   useEffect(() => {
-    getBookmarks();
+    getEnrolled();
   }, []);
 
   return (
@@ -75,9 +75,9 @@ export default function Bookmarks() {
             {user.name}!
           </Text>{" "}
         </Heading>
-        <Text>Here are all the courses you have bookmarked!</Text>
-        {bookmarks?.length < 1 ? (
-          <Heading fontSize="1rem">Please bookmark some courses</Heading>
+        <Text>Here are all the courses you have Enrolled In!</Text>
+        {enrolled?.length < 1 ? (
+          <Heading fontSize="1rem">Please Enroll in some courses</Heading>
         ) : (
           <Skeleton isLoaded={!loading}>
             {loading && <BeatLoader color="#6B46C1" />}
@@ -85,18 +85,18 @@ export default function Bookmarks() {
               templateColumns={{ base: "repeat(1, 1fr)", md: "repeat(4, 1fr)" }}
               gap={6}
             >
-              {bookmarks?.map((bookmark) => {
+              {enrolled?.map((enrolled) => {
                 return (
                   <GridItem
                     colSpan={2}
-                    key={bookmark.course.id}
+                    key={enrolled.course.id}
                   >
                     <NextLink
-                      href={`/dashboard/courses/course/${bookmark?.course.public_id}`}
+                      href={`/dashboard/courses/course/${enrolled?.course.public_id}`}
                     >
                       <Flex
                         w="100%"
-                        key={bookmark.course.id}
+                        key={enrolled.course.id}
                         h="fit-content"
                         rounded="8px"
                         bg={bg}
@@ -115,9 +115,9 @@ export default function Bookmarks() {
                           align={{ base: "center", md: "start" }}
                         >
                           <Text casing="capitalize">
-                            {bookmark.course.title}
+                            {enrolled.course.title}
                           </Text>
-                          <Text>{bookmark.course.description}</Text>
+                          <Text>{enrolled.course.description}</Text>
                         </Flex>
                       </Flex>
                     </NextLink>

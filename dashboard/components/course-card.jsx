@@ -23,6 +23,8 @@ import {
   AiOutlineEye,
   AiOutlineInfoCircle,
   AiOutlineSave,
+  AiOutlineInsertRowAbove,
+  AiOutlineSelect,
 } from "react-icons/ai";
 import { BsBookmark, BsStar, BsStarFill, BsStarHalf } from "react-icons/bs";
 import { FiShoppingCart } from "react-icons/fi";
@@ -35,10 +37,12 @@ import { useSelector, useDispatch } from "react-redux";
 const CourseCard = ({ title, id, description, public_id, genre_id }) => {
   const { token, user } = useSelector((state) => state.user);
   const { vote } = useSelector((state) => state.course);
+  const [votec, setVotec] = useState();
   const dispatch = useDispatch();
   const color = useColorModeValue("white", "gray.800");
   const lastUpdatedColor = useColorModeValue("gray.600", "gray.300");
   const [bookmark, setbookmark] = useState(false);
+  const [enrolled, setEnrolled] = useState(false);
 
   const onVote = async (data) => {
     if (vote == undefined) {
@@ -54,7 +58,7 @@ const CourseCard = ({ title, id, description, public_id, genre_id }) => {
             },
           }
         );
-        dispatch({ type: "course/setVote", payload: data });
+        setVotec(res.data.data.voteC.vote);
       } catch (err) {}
     } else {
       try {
@@ -69,17 +73,43 @@ const CourseCard = ({ title, id, description, public_id, genre_id }) => {
             },
           }
         );
-        dispatch({ type: "course/setVote", payload: data });
+        setVotec(res.data.data.vote.vote);
       } catch (err) {
         console.log(err);
       }
     }
   };
 
+  useEffect(() => {
+    // dispatch({ type: "course/resetVote" });
+  }, [public_id]);
+
   const onBookmark = async () => {
     try {
       const res = await axios.post(
         `https://roadmap-backend-host.herokuapp.com/api/v1/course/${public_id}/bookmark`,
+        {
+          bookmark: "",
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      // dispatch({ type: "course/setVote", payload: data });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const onEnrollment = async () => {
+    try {
+      const res = await axios.post(
+        `https://roadmap-backend-host.herokuapp.com/api/v1/course/${public_id}/enrollment`,
+        {
+          bookmark: "",
+        },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -134,7 +164,7 @@ const CourseCard = ({ title, id, description, public_id, genre_id }) => {
             <ButtonGroup>
               <IconButton
                 variant={
-                  vote === undefined || vote == false ? "ghost" : "solid"
+                  votec === undefined || votec == false ? "ghost" : "solid"
                 }
                 onClick={() => onVote(true)}
                 colorScheme="green"
@@ -142,7 +172,9 @@ const CourseCard = ({ title, id, description, public_id, genre_id }) => {
                 aria-label="upvote"
               />
               <IconButton
-                variant={vote === undefined || vote == true ? "ghost" : "solid"}
+                variant={
+                  votec === undefined || votec == true ? "ghost" : "solid"
+                }
                 colorScheme="red"
                 onClick={() => onVote(false)}
                 icon={<AiOutlineArrowDown />}
@@ -168,6 +200,13 @@ const CourseCard = ({ title, id, description, public_id, genre_id }) => {
               onClick={() => onBookmark()}
               icon={<BsBookmark />}
               aria-label="bookmark"
+            />
+            <IconButton
+              variant={enrolled ? "solid" : "ghost"}
+              colorScheme="purple"
+              onClick={() => onEnrollment()}
+              icon={<AiOutlineSelect />}
+              aria-label="saved"
             />
           </Flex>
           <NextLink href={`/dashboard/courses/course/${public_id}`}>

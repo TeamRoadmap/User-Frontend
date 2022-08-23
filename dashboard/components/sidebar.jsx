@@ -147,9 +147,12 @@ const Sidebar = () => {
         <NavLink to="/dashboard/bookmarks">
           <NavItem icon={AiOutlineFund}>Bookmarks</NavItem>
         </NavLink>
-        <NavLink to="/dashboard/settings">
-          <NavItem icon={AiOutlineSetting}>Settings</NavItem>
+        <NavLink to="/dashboard/enrolled">
+          <NavItem icon={AiOutlineSetting}>Enrolled</NavItem>
         </NavLink>
+        {/* <NavLink to="/dashboard/settings">
+          <NavItem icon={AiOutlineSetting}>Settings</NavItem>
+        </NavLink> */}
 
         <Button
           m="6"
