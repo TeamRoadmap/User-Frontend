@@ -111,6 +111,18 @@ export const Course = () => {
           </Code>
         );
       }
+      if (domNode instanceof Element && domNode.name === "iframe") {
+        const { src, alt } = domNode.attribs;
+        console.log(domNode);
+        return (
+          <iframe
+            width="260"
+            src={`${src}`}
+          >
+            {domToReact(domNode.children)}
+          </iframe>
+        );
+      }
     },
   };
 
@@ -168,13 +180,13 @@ export const Course = () => {
         />
       </Head>
       <Flex
-        m="6"
+        m={{ sm: "2", md: "6" }}
         gap="4"
         direction="column"
-        align="center"
+        align="left"
       >
         <Text
-          fontSize="3xl"
+          fontSize={{ sm: "2xl", md: "3xl" }}
           variant="h1"
           casing="capitalize"
           fontWeight="600"
@@ -182,7 +194,7 @@ export const Course = () => {
           Course Title- {courseDetail?.course?.title}
         </Text>
         <Text
-          fontSize="xl"
+          fontSize={{ sm: "lg", md: "xl" }}
           variant="h1"
           casing="capitalize"
           fontWeight="400"
@@ -191,14 +203,15 @@ export const Course = () => {
         </Text>
       </Flex>
       <Box
-        my="12"
-        mx="6"
-        p="8"
+        my={{ sm: "6", md: "12" }}
+        mx={{ sm: "0", md: "6" }}
+        py="8"
+        px={{ sm: "0", md: "8" }}
       >
         {sectionData == "" && (
           <Text
             fontSize="xl"
-            textAlign="center"
+            textAlign="left"
           >
             Start exploring the course through sections!
           </Text>
@@ -215,7 +228,7 @@ export const Course = () => {
               >
                 <Text
                   as="h1"
-                  fontSize="1.4rem"
+                  fontSize={{ sm: "1rem", md: "1.2rem" }}
                   fontWeight="700"
                 >
                   {" "}
@@ -223,7 +236,7 @@ export const Course = () => {
                 </Text>
                 <Text
                   as="h1"
-                  fontSize="1.2rem"
+                  fontSize={{ sm: "1rem", md: "1.2rem" }}
                   fontWeight="400"
                 >
                   Description: {sectionData?.description}

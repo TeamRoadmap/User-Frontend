@@ -140,7 +140,7 @@ const CourseSidebar = ({ data }) => {
       borderColor={useColorModeValue("gray.100", "gray.700")}
       color="inherit"
       borderRightWidth="1px"
-      w={{ md: "40%", lg: "20%", xl: "12%" }}
+      w="66"
       {...props}
     >
       <Flex
@@ -196,16 +196,14 @@ const CourseSidebar = ({ data }) => {
               <div key={data.order}>
                 <Stack
                   direction="row"
-                  alignItems="flex-start"
+                  alignItems="center"
                   h="50px"
                 >
                   <Divider orientation="vertical" />
                   <Button
                     variant="link"
-                    fontSize="1.2rem"
                     p="2"
                     py="0"
-                    textTransform="capitalize"
                     onClick={() => getSectionData(data.public_id)}
                     color={
                       activeSection == `${data.public_id}`
@@ -213,7 +211,12 @@ const CourseSidebar = ({ data }) => {
                         : color
                     }
                   >
-                    {data.title}
+                    <Text
+                      textOverflow="ellipsis"
+                      fontSize="1rem"
+                    >
+                      {data.title}
+                    </Text>
                   </Button>
                 </Stack>
 
@@ -240,9 +243,13 @@ const CourseSidebar = ({ data }) => {
                           }
                           p="2"
                           py="0"
-                          fontSize="1.2rem"
                         >
-                          {subsec.title}
+                          <Text
+                            p="2"
+                            fontSize="0.8rem"
+                          >
+                            {subsec.title}
+                          </Text>
                         </Button>
                       </Stack>
                     );
