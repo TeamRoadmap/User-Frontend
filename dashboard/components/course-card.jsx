@@ -24,6 +24,7 @@ import {
   AiOutlineInfoCircle,
   AiOutlineSave,
   AiOutlineInsertRowAbove,
+  AiOutlineSelect,
 } from "react-icons/ai";
 import { BsBookmark, BsStar, BsStarFill, BsStarHalf } from "react-icons/bs";
 import { FiShoppingCart } from "react-icons/fi";
@@ -41,6 +42,7 @@ const CourseCard = ({ title, id, description, public_id, genre_id }) => {
   const color = useColorModeValue("white", "gray.800");
   const lastUpdatedColor = useColorModeValue("gray.600", "gray.300");
   const [bookmark, setbookmark] = useState(false);
+  const [enrolled, setEnrolled] = useState(false);
 
   const onVote = async (data) => {
     if (vote == undefined) {
@@ -85,7 +87,7 @@ const CourseCard = ({ title, id, description, public_id, genre_id }) => {
   const onBookmark = async () => {
     try {
       const res = await axios.post(
-        `https://roadmap-backend-host.herokuapp.com/api/v1/course/6fea8488-0580-4408-b6e2-1cb5e7da3b05/bookmark`,
+        `https://roadmap-backend-host.herokuapp.com/api/v1/course/${public_id}/bookmark`,
         {
           bookmark: "",
         },
@@ -95,6 +97,27 @@ const CourseCard = ({ title, id, description, public_id, genre_id }) => {
           },
         }
       );
+      console.log(res.data.data.bookmark.course_id);
+      // dispatch({ type: "course/setVote", payload: data });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const onEnrollment = async () => {
+    try {
+      const res = await axios.post(
+        `https://roadmap-backend-host.herokuapp.com/api/v1/course/${public_id}/enrollment`,
+        {
+          bookmark: "",
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log(res.data.data);
       // dispatch({ type: "course/setVote", payload: data });
     } catch (err) {
       console.log(err);
@@ -181,9 +204,10 @@ const CourseCard = ({ title, id, description, public_id, genre_id }) => {
               aria-label="bookmark"
             />
             <IconButton
+              variant={enrolled ? "solid" : "ghost"}
               colorScheme="purple"
-              onClick={() => onEnroll()}
-              icon={<AiOutlineInsertRowAbove />}
+              onClick={() => onEnrollment()}
+              icon={<AiOutlineSelect />}
               aria-label="saved"
             />
           </Flex>
