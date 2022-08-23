@@ -90,12 +90,12 @@ export default function Bookmarks() {
                 {bookmarks?.map((bookmark) => {
                   return (
                     <NextLink
-                      key={type.id}
-                      href={`/dashboard/courses/${type.public_id}`}
+                      key={bookmark.course.id}
+                      href={`/dashboard/courses/course/${bookmark?.course.public_id}`}
                     >
                       <Flex
                         w="100%"
-                        key={type.id}
+                        key={bookmark.course.id}
                         h="fit-content"
                         rounded="8px"
                         bg={bg}
@@ -113,7 +113,9 @@ export default function Bookmarks() {
                           direction="column"
                           align={{ base: "center", md: "start" }}
                         >
-                          <Text casing="capitalize">{type.name}</Text>
+                          <Text casing="capitalize">
+                            {bookmark.course.title}
+                          </Text>
                           <Text>
                             Discover the concepts, reference, guides and
                             tutorials.
