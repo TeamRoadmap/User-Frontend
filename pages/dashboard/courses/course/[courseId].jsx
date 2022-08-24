@@ -28,30 +28,32 @@ import parse, {
 import Image from "next/image";
 
 import Head from "next/head";
-import { async } from "@firebase/util";
 import { useTransform, useScroll } from "framer-motion";
+import { AiOutlineSelect } from "react-icons/ai";
 
 export const Course = () => {
   const notify = () => toast("Saved");
   const { token } = useSelector((state) => state.user);
-  const { sectionData } = useSelector((state) => state.course);
+  const { sectionData, course, courseLoading } = useSelector(
+    (state) => state.course
+  );
   const [courseDetail, setCourseDetail] = useState();
   const [scrollProgress, setScrollProgress] = useState();
   const [error, setError] = useState();
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const router = useRouter();
-  const { course } = router.query;
+  const { courseId } = router.query;
   const contentColor = useColorModeValue("gray.700", "gray.200");
   const { scrollYProgress } = useScroll();
-
+  const [enrollLoading, setEnrollLoading] = useState(false);
   const linkColor = useColorModeValue("purple.500", "purple.200");
   const codeColor = useColorModeValue("gray.200", "gray.700");
 
   const getSectionCompletion = async () => {
     try {
       const res = await axios.get(
-        `https://roadmap-backend-host.herokuapp.com/api/v1/course/${course}/progress`,
+        `https://roadmap-backend-host.herokuapp.com/api/v1/course/${courseId}/progress`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -72,7 +74,7 @@ export const Course = () => {
       if (scrollProgress !== undefined && scrollProgress > 80) {
         try {
           const res = await axios.post(
-            `https://roadmap-backend-host.herokuapp.com/api/v1/course/${course}/progress`,
+            `https://roadmap-backend-host.herokuapp.com/api/v1/course/${courseId}/progress`,
             {
               section_id: sectionData.id,
             },
@@ -194,6 +196,7 @@ export const Course = () => {
             bg={codeColor}
             px="6"
             py="4"
+            mb="4"
             rounded="8"
           >
             {domToReact(domNode.children)}
@@ -211,6 +214,16 @@ export const Course = () => {
           </iframe>
         );
       }
+      if (domNode instanceof Element && domNode.name === "ol") {
+        return (
+          <ol style={{ padding: "0 16px" }}>{domToReact(domNode.children)}</ol>
+        );
+      }
+      if (domNode instanceof Element && domNode.name === "ul") {
+        return (
+          <ul style={{ padding: "0 16px" }}>{domToReact(domNode.children)}</ul>
+        );
+      }
     },
   };
 
@@ -218,66 +231,114 @@ export const Course = () => {
     setLoading(true);
     try {
       const res = await axios.get(
-        `https://roadmap-backend-host.herokuapp.com/api/v1/course/${course}`,
+        `https://roadmap-backend-host.herokuapp.com/api/v1/course/${courseId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
       );
+      console.log(res);
       setCourseDetail(res.data.data);
       dispatch({ type: "course/setCourse", payload: res.data.data.course });
       dispatch({ type: "course/setSection", payload: res.data.data.sections });
       // setCourseDetail(res.data.data.courses);
       setLoading(false);
+      setEnrollLoading(false);
     } catch (err) {
       setError("error occured");
     }
-
-    // dispatch({ type: "course/setCourse", payload: res.data });
   };
 
-  // const updateSection = async () => {
-  //   const res = await axios.patch(
-  //     `https://e2b008aa-8ef7-4125-8063-532dfb7d0c2e.mock.pstmn.io/getSection?id=${editorSection.id}`,
-  //     {
-  //       title: editorSection.title,
-  //       description: editorSection.description,
-  //       content: editorSection.content,
-  //     }
-  //   );
-  //   notify();
-  // };
+  const onEnrollment = async (data) => {
+    setEnrollLoading(true);
+    if (courseDetail?.course?.enrolled === false) {
+      try {
+        const res = await axios.post(
+          `https://roadmap-backend-host.herokuapp.com/api/v1/course/${courseId}/enrollment`,
+          {
+            bookmark: data,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        getCourseDetail();
+      } catch (err) {
+        console.log(err);
+      }
+    } else {
+      try {
+        const res = await axios.delete(
+          `https://roadmap-backend-host.herokuapp.com/api/v1/course/${courseId}/enrollment`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        getCourseDetail();
+        console.log(res);
+      } catch (err) {
+        console.log(err);
+      }
+    }
+  };
+
   useEffect(() => {
     getCourseDetail();
+
     dispatch({ type: "course/resetSection" });
   }, []);
 
   return (
     <CourseLayout data={courseDetail}>
       <Flex
-        m={{ sm: "2", md: "6" }}
+        m={{ sm: "2", md: "4" }}
         gap="4"
-        direction="column"
-        align="left"
+        direction="row"
+        justifyContent="space-between"
+        align="flex-start"
       >
-        <Text
-          fontSize={{ sm: "2xl", md: "3xl" }}
-          variant="h1"
-          casing="capitalize"
-          fontWeight="600"
+        <Flex
+          gap="4"
+          direction="column"
+          align="left"
         >
-          Course Title- {courseDetail?.course?.title}
-        </Text>
-        <Text
-          fontSize={{ sm: "lg", md: "xl" }}
-          variant="h1"
-          casing="capitalize"
-          fontWeight="400"
+          <Skeleton isLoaded={!loading}>
+            <Text
+              fontSize={{ sm: "xl", md: "2xl" }}
+              variant="h1"
+              casing="capitalize"
+              fontWeight="600"
+            >
+              Course Title: {courseDetail?.course?.title}
+            </Text>
+          </Skeleton>
+          <Skeleton isLoaded={!loading}>
+            <Text
+              fontSize={{ sm: "lg", md: "xl" }}
+              variant="h1"
+              casing="capitalize"
+              fontWeight="400"
+            >
+              Course description: {courseDetail?.course?.description}
+            </Text>
+          </Skeleton>
+        </Flex>
+        <Button
+          isLoading={enrollLoading}
+          variant={courseDetail?.course?.enrolled ? "solid" : "ghost"}
+          colorScheme="purple"
+          onClick={() => onEnrollment(!courseDetail?.course?.enrolled)}
+          aria-label="saved"
         >
-          Course description -{courseDetail?.course?.description}
-        </Text>
+          {courseDetail?.course?.enrolled ? "Enrolled" : "Enroll now"}
+        </Button>
       </Flex>
+
       <Box
         my={{ sm: "6", md: "12" }}
         mx={{ sm: "0", md: "6" }}
@@ -302,21 +363,25 @@ export const Course = () => {
                 gap="2"
                 direction="column"
               >
-                <Text
-                  as="h1"
-                  fontSize={{ sm: "1rem", md: "1.2rem" }}
-                  fontWeight="700"
-                >
-                  {" "}
-                  Title: {sectionData?.title}
-                </Text>
-                <Text
-                  as="h1"
-                  fontSize={{ sm: "1rem", md: "1.2rem" }}
-                  fontWeight="400"
-                >
-                  Description: {sectionData?.description}
-                </Text>
+                <Skeleton isLoaded={!loading}>
+                  <Text
+                    as="h1"
+                    fontSize={{ sm: "1rem", md: "1.2rem" }}
+                    fontWeight="700"
+                  >
+                    {" "}
+                    Title: {sectionData?.title}
+                  </Text>
+                </Skeleton>
+                <Skeleton isLoaded={!loading}>
+                  <Text
+                    as="h1"
+                    fontSize={{ sm: "1rem", md: "1.2rem" }}
+                    fontWeight="400"
+                  >
+                    Description: {sectionData?.description}
+                  </Text>
+                </Skeleton>
               </Flex>
               <Flex
                 gap="6"
@@ -324,7 +389,7 @@ export const Course = () => {
               >
                 <Box
                   my="2"
-                  bg="white"
+                  bg="#F9F9F6"
                   rounded="8"
                   _dark={{ bg: "gray.900" }}
                   p="8"
@@ -338,7 +403,7 @@ export const Course = () => {
       </Box>
     </CourseLayout>
   );
-};;;;;
+};
 
 export default Course;
 

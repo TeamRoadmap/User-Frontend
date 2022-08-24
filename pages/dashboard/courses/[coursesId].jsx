@@ -42,10 +42,9 @@ export const Courses = () => {
       dispatch({ type: "course/setCourses", payload: res.data.data });
       setLoading(false);
     } catch (err) {
+      console.log(err);
       setError("error occured");
     }
-
-    // dispatch({ type: "course/setCourse", payload: res.data });
   };
 
   useEffect(() => {
@@ -97,7 +96,7 @@ export const Courses = () => {
           </Grid>
         </Skeleton>
         {/* {error && <Err} */}
-        {courses?.length === 0 && (
+        {courses?.length === 0 && !loading && (
           <Heading fontSize="1rem">
             We will have more courses on our platform soon!
           </Heading>

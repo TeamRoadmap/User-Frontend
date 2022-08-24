@@ -49,9 +49,8 @@ const CourseCard = ({
   const dispatch = useDispatch();
   const color = useColorModeValue("white", "gray.800");
   const [loading, setLoading] = useState(false);
+  const [bookLoading, setBookLoading] = useState(false);
   const lastUpdatedColor = useColorModeValue("gray.600", "gray.300");
-  const [bookmark, setbookmark] = useState(false);
-  const [enroll, setEnroll] = useState(false);
 
   const getCourseDetail = async () => {
     try {
@@ -65,6 +64,8 @@ const CourseCard = ({
       );
       dispatch({ type: "course/setCourses", payload: res.data.data });
       setLoading(false);
+      setBookLoading(false);
+      setEnrollLoading(false);
     } catch (err) {
       setError("error occured");
     }
@@ -89,8 +90,6 @@ const CourseCard = ({
         getCourseDetail();
       } catch (err) {}
     } else {
-      setLoading(true);
-
       try {
         const res = await axios.patch(
           `https://roadmap-backend-host.herokuapp.com/api/v1/course/${public_id}/vote`,
@@ -111,42 +110,42 @@ const CourseCard = ({
   };
 
   const onBookmark = async (data) => {
-    try {
-      const res = await axios.post(
-        `https://roadmap-backend-host.herokuapp.com/api/v1/course/${public_id}/bookmark`,
-        {
-          bookmark: data,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
+    setBookLoading(true);
+    if (bookmarked == false) {
+      try {
+        const res = await axios.post(
+          `https://roadmap-backend-host.herokuapp.com/api/v1/course/${public_id}/bookmark`,
+          {
+            bookmark: data,
           },
-        }
-      );
-      console.log(res);
-    } catch (err) {
-      console.log(err);
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        getCourseDetail();
+      } catch (err) {
+        console.log(err);
+      }
+    } else {
+      try {
+        const res = await axios.delete(
+          `https://roadmap-backend-host.herokuapp.com/api/v1/course/${public_id}/bookmark`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        getCourseDetail();
+      } catch (err) {
+        console.log(err);
+      }
     }
   };
 
-  const onEnrollment = async (data) => {
-    try {
-      const res = await axios.post(
-        `https://roadmap-backend-host.herokuapp.com/api/v1/course/${public_id}/enrollment`,
-        {
-          bookmark: data,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      console.log(res);
-    } catch (err) {
-      console.log(err);
-    }
-  };
+
 
   return (
     <Box
@@ -211,20 +210,15 @@ const CourseCard = ({
               {description}
             </Text>
             <IconButton
-              variant={bookmark ? "solid" : "ghost"}
+              isLoading={bookLoading}
+              variant={bookmarked ? "solid" : "ghost"}
               colorScheme="purple"
               onClick={() => onBookmark(!bookmarked)}
               icon={<BsBookmark />}
               aria-label="bookmark"
             />
-            <IconButton
-              variant={enrolled ? "solid" : "ghost"}
-              colorScheme="purple"
-              onClick={() => onEnrollment(!enrolled)}
-              icon={<AiOutlineSelect />}
-              aria-label="saved"
-            />
           </Flex>
+          <Flex></Flex>
           <NextLink href={`/dashboard/courses/course/${public_id}`}>
             <Button>Learn more</Button>
           </NextLink>
