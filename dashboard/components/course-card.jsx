@@ -147,6 +147,7 @@ const CourseCard = ({
   return (
     <Box
       maxW={"full"}
+      h="full"
       bg={useColorModeValue("white", "gray.800")}
       boxShadow={"md"}
       rounded={"md"}
@@ -156,7 +157,7 @@ const CourseCard = ({
       <Box
         maxW="full"
         p="2"
-        mb="8"
+        mb="2"
       >
         <NextLink href={`/dashboard/courses/course/${public_id}`}>
           {image !== null ? (
@@ -195,6 +196,7 @@ const CourseCard = ({
         <Flex
           direction="column"
           gap="6"
+          pb="2"
         >
           <Flex
             direction="row"
