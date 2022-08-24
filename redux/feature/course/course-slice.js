@@ -33,6 +33,7 @@ const courseSlice = createSlice({
     },
     resetSection: (state, action) => {
       state.section = [];
+      state.sectionData = [];
       state.sectionLoading = true;
     },
     setCourses: (state, action) => {

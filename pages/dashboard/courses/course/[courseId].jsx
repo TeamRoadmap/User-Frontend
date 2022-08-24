@@ -53,7 +53,7 @@ export const Course = () => {
   const getSectionCompletion = async () => {
     try {
       const res = await axios.get(
-        `https://roadmap-backend-host.herokuapp.com/api/v1/course/${course}/progress`,
+        `https://roadmap-backend-host.herokuapp.com/api/v1/course/${courseId}/progress`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -74,7 +74,7 @@ export const Course = () => {
       if (scrollProgress !== undefined && scrollProgress > 80) {
         try {
           const res = await axios.post(
-            `https://roadmap-backend-host.herokuapp.com/api/v1/course/${course}/progress`,
+            `https://roadmap-backend-host.herokuapp.com/api/v1/course/${courseId}/progress`,
             {
               section_id: sectionData.id,
             },
@@ -255,7 +255,7 @@ export const Course = () => {
     if (courseDetail?.course?.enrolled === false) {
       try {
         const res = await axios.post(
-          `https://roadmap-backend-host.herokuapp.com/api/v1/course/${course}/enrollment`,
+          `https://roadmap-backend-host.herokuapp.com/api/v1/course/${courseId}/enrollment`,
           {
             bookmark: data,
           },
@@ -272,7 +272,7 @@ export const Course = () => {
     } else {
       try {
         const res = await axios.delete(
-          `https://roadmap-backend-host.herokuapp.com/api/v1/course/${course}/enrollment`,
+          `https://roadmap-backend-host.herokuapp.com/api/v1/course/${courseId}/enrollment`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
