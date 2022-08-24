@@ -30,6 +30,7 @@ import Image from "next/image";
 import Head from "next/head";
 import { useTransform, useScroll } from "framer-motion";
 import { AiOutlineSelect } from "react-icons/ai";
+import { async } from "@firebase/util";
 
 export const Course = () => {
   const notify = () => toast("Saved");
@@ -240,10 +241,10 @@ export const Course = () => {
       );
       console.log(res);
       setCourseDetail(res.data.data);
+      setLoading(false);
       dispatch({ type: "course/setCourse", payload: res.data.data.course });
       dispatch({ type: "course/setSection", payload: res.data.data.sections });
       // setCourseDetail(res.data.data.courses);
-      setLoading(false);
       setEnrollLoading(false);
     } catch (err) {
       setError("error occured");
@@ -289,7 +290,6 @@ export const Course = () => {
 
   useEffect(() => {
     getCourseDetail();
-
     dispatch({ type: "course/resetSection" });
   }, []);
 
@@ -341,9 +341,9 @@ export const Course = () => {
 
       <Box
         my={{ sm: "6", md: "12" }}
-        mx={{ sm: "0", md: "6" }}
+        mx="2"
         py="8"
-        px={{ sm: "0", md: "8" }}
+        px="2"
       >
         {sectionData == "" && (
           <Text
@@ -368,6 +368,7 @@ export const Course = () => {
                     as="h1"
                     fontSize={{ sm: "1rem", md: "1.2rem" }}
                     fontWeight="700"
+                    casing="capitalize"
                   >
                     {" "}
                     Title: {sectionData?.title}
@@ -378,6 +379,7 @@ export const Course = () => {
                     as="h1"
                     fontSize={{ sm: "1rem", md: "1.2rem" }}
                     fontWeight="400"
+                    casing="capitalize"
                   >
                     Description: {sectionData?.description}
                   </Text>

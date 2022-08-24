@@ -29,7 +29,7 @@ import { BsBookmark, BsStar, BsStarFill, BsStarHalf } from "react-icons/bs";
 import { FiShoppingCart } from "react-icons/fi";
 import NextLink from "next/link";
 import Image from "next/image";
-
+import { BiUpvote, BiDownvote } from "react-icons/bi";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
@@ -147,51 +147,56 @@ const CourseCard = ({
   return (
     <Box
       maxW={"full"}
+      h="full"
       bg={useColorModeValue("white", "gray.800")}
       boxShadow={"md"}
       rounded={"md"}
-      p="4"
       pos={"relative"}
       zIndex={1}
     >
       <Box
         maxW="full"
         p="2"
-        mb="8"
+        mb="2"
       >
-        {image !== null ? (
-          <Image
-            alt="img"
-            p="4"
-            width="4"
-            height="2"
-            layout="responsive"
-            style={{
-              borderRadius: "8px",
-              objectFit: "contain",
-            }}
-            src={image}
-          />
-        ) : (
-          <Image
-            alt="dummyimg"
-            p="4"
-            width="4"
-            height="2"
-            layout="responsive"
-            style={{
-              borderRadius: "8px",
-              objectFit: "contain",
-            }}
-            src="/images/dummy-img.webp"
-          />
-        )}
+        <NextLink href={`/dashboard/courses/course/${public_id}`}>
+          {image !== null ? (
+            <Image
+              alt="img"
+              p="4"
+              width="4"
+              height="2"
+              layout="responsive"
+              style={{
+                borderRadius: "8px",
+                objectFit: "contain",
+                cursor: "pointer",
+              }}
+              src={image}
+            />
+          ) : (
+            <Image
+              alt="dummyimg"
+              p="4"
+              width="4"
+              height="2"
+              layout="responsive"
+              style={{
+                borderRadius: "8px",
+                objectFit: "contain",
+                cursor: "pointer",
+              }}
+              src="/images/dummy-img.webp"
+            />
+          )}
+        </NextLink>
       </Box>
 
       <Box px="4">
         <Flex
           direction="column"
-          gap="12"
+          gap="6"
+          pb="2"
         >
           <Flex
             direction="row"
@@ -208,45 +213,49 @@ const CourseCard = ({
               {title}
             </Text>
             <ButtonGroup>
-              <IconButton
-                isLoading={loading}
-                variant={vote == undefined || vote == false ? "ghost" : "solid"}
-                onClick={() => onVote(true)}
-                colorScheme="green"
-                icon={<AiOutlineArrowUp />}
-                aria-label="upvote"
-              />
-              <IconButton
-                isLoading={loading}
-                variant={vote == undefined || vote == true ? "ghost" : "solid"}
-                colorScheme="red"
-                onClick={() => onVote(false)}
-                icon={<AiOutlineArrowDown />}
-                aria-label="downvote"
-              />
+              <Tooltip label="Upvote">
+                <IconButton
+                  isLoading={loading}
+                  variant={
+                    vote == undefined || vote == false ? "ghost" : "solid"
+                  }
+                  onClick={() => onVote(true)}
+                  colorScheme="green"
+                  icon={<BiUpvote />}
+                  aria-label="upvote"
+                />
+              </Tooltip>
+              <Tooltip label="Downvote">
+                <IconButton
+                  isLoading={loading}
+                  variant={
+                    vote == undefined || vote == true ? "ghost" : "solid"
+                  }
+                  colorScheme="red"
+                  onClick={() => onVote(false)}
+                  icon={<BiDownvote />}
+                  aria-label="downvote"
+                />
+              </Tooltip>
+              <Tooltip label="bookmark">
+                <IconButton
+                  isLoading={bookLoading}
+                  variant={bookmarked ? "solid" : "ghost"}
+                  colorScheme="purple"
+                  onClick={() => onBookmark(!bookmarked)}
+                  icon={<BsBookmark size="1rem" />}
+                  aria-label="bookmark"
+                />
+              </Tooltip>
             </ButtonGroup>
           </Flex>
-          <Flex
-            direction="row"
-            justifyContent="space-between"
-            alignItems="center"
+          <Text
+            as="p"
+            fontSize="lg"
+            color={lastUpdatedColor}
           >
-            <Text
-              as="p"
-              fontSize="lg"
-              color={lastUpdatedColor}
-            >
-              {description}
-            </Text>
-            <IconButton
-              isLoading={bookLoading}
-              variant={bookmarked ? "solid" : "ghost"}
-              colorScheme="purple"
-              onClick={() => onBookmark(!bookmarked)}
-              icon={<BsBookmark size="1.4rem" />}
-              aria-label="bookmark"
-            />
-          </Flex>
+            {description}
+          </Text>
           <NextLink href={`/dashboard/courses/course/${public_id}`}>
             <Button>Learn more</Button>
           </NextLink>

@@ -14,6 +14,9 @@ import {
   Stack,
   Divider,
   Skeleton,
+  List,
+  ListItem,
+  ListIcon,
 } from "@chakra-ui/react";
 import {
   AiOutlineContainer,
@@ -31,6 +34,9 @@ import { useState } from "react";
 import axios from "axios";
 import { useEffect } from "react";
 import { BeatLoader, GridLoader } from "react-spinners";
+import { BiCheckCircle } from "react-icons/bi";
+import { BsCircleFill, BsCircle } from "react-icons/bs";
+import { TbCircleDot } from "react-icons/tb";
 
 const CourseSidebar = ({ data }) => {
   const { colorMode, toggleColorMode } = useColorMode();
@@ -158,22 +164,41 @@ const CourseSidebar = ({ data }) => {
       <Flex
         px="4"
         py="6"
-        align="center"
+        direction="column"
+        align="left"
         justify="space-between"
         gap="4"
       >
-        <Skeleton isLoaded={!loading}>
-          <Text
-            fontSize="xl"
-            mt={{ sm: "2", md: "4" }}
-            ml="2"
-            color="brand.500"
-            _dark={{ color: "white" }}
-            fontWeight="bold"
+        <Text
+          fontSize="xl"
+          mt={{ sm: "2", md: "4" }}
+          align="left"
+          color="brand.500"
+          _dark={{ color: "white" }}
+          fontWeight="bold"
+          casing="capitalize"
+        >
+          {!loading ? `${course?.title}` : "Loading...."}
+        </Text>
+        <Flex
+          gap="4"
+          direction="row"
+          justifyContent="space-between"
+        >
+          <Button
+            onClick={toggleColorMode}
+            w="40%"
           >
-            {course?.title}
-          </Text>
-        </Skeleton>
+            {colorMode === "light" ? <FiMoon /> : <FiSun color="#A0AEC0" />}
+          </Button>
+          <Button
+            w="50%"
+            onClick={() => router.push(`/dashboard/courses/${course.types[0]}`)}
+            color={color}
+          >
+            Courses
+          </Button>
+        </Flex>
 
         <IconButton
           aria-label="Menu"
@@ -203,17 +228,59 @@ const CourseSidebar = ({ data }) => {
           Sections
         </Text>
         {sectionLoading ? (
-          <GridLoader color="#6B46C1" />
+          <Stack>
+            <Skeleton height="20px" />
+            <Skeleton height="20px" />
+            <Skeleton height="20px" />
+          </Stack>
         ) : (
-          <Flex
-            direction="column"
-            align="left"
-            mx="4"
+          // <Flex
+          //   direction="column"
+          //   align="left"
+          //   mx="4"
+          // >
+          <List
+            spacing="4"
+            stylePosition="outside"
           >
             {section?.map((data) => {
               return (
                 <div key={data.order}>
-                  <Stack
+                  <ListItem
+                    onClick={() => getSectionData(data.public_id)}
+                    ml="2"
+                    cursor="pointer"
+                    py="1"
+                  >
+                    <ListIcon
+                      as={
+                        activeSection == `${data.public_id}`
+                          ? BsCircleFill
+                          : BsCircle
+                      }
+                      color="purple.600"
+                    />
+                    <Button
+                      variant="link"
+                      p="2"
+                      py="0"
+                      onClick={() => getSectionData(data.public_id)}
+                      color={
+                        activeSection == `${data.public_id}`
+                          ? selectedColor
+                          : color
+                      }
+                    >
+                      <Text
+                        textOverflow="ellipsis"
+                        fontSize="1rem"
+                        casing="capitalize"
+                      >
+                        {data.title}
+                      </Text>
+                    </Button>
+                  </ListItem>
+                  {/* <Stack
                     direction="row"
                     alignItems="center"
                     h="50px"
@@ -233,66 +300,87 @@ const CourseSidebar = ({ data }) => {
                       <Text
                         textOverflow="ellipsis"
                         fontSize="1rem"
+                        casing="capitalize"
                       >
                         {data.title}
                       </Text>
                     </Button>
-                  </Stack>
+                  </Stack> */}
 
-                  <Flex direction="column">
+                  <List
+                    spacing={3}
+                    stylePosition="inside"
+                  >
                     {data?.subsections?.map((subsec, id) => {
                       return (
-                        <Stack
+                        <ListItem
+                          align="center"
+                          onClick={() => getSubsectionData(subsec.public_id)}
+                          cursor="pointer"
                           key={subsec?.id}
-                          direction="row"
-                          alignItems="flex-start"
-                          h="50px"
-                          px={4}
-                          py="2"
                         >
-                          <Divider orientation="vertical" />
+                          <ListIcon
+                            as={
+                              activeSection == `${subsec.public_id}`
+                                ? BsCircleFill
+                                : BsCircle
+                            }
+                            color="purple.600"
+                          />
                           <Button
                             variant="link"
                             textTransform="capitalize"
-                            onClick={() => getSubsectionData(subsec.public_id)}
                             color={
                               activeSection == `${subsec.public_id}`
                                 ? selectedColor
                                 : color
                             }
-                            p="2"
-                            py="0"
                           >
                             <Text
-                              p="2"
-                              fontSize="0.8rem"
+                              py="2"
+                              fontSize="0.9rem"
                             >
                               {subsec.title}
                             </Text>
                           </Button>
-                        </Stack>
+                        </ListItem>
+                        // <Stack
+                        //   key={subsec?.id}
+                        //   direction="row"
+                        //   alignItems="flex-start"
+                        //   h="50px"
+                        //   px={4}
+                        //   py="2"
+                        // >
+                        //   <Divider orientation="vertical" />
+                        //   <Button
+                        //     variant="link"
+                        //     textTransform="capitalize"
+                        //     onClick={() => getSubsectionData(subsec.public_id)}
+                        //     color={
+                        //       activeSection == `${subsec.public_id}`
+                        //         ? selectedColor
+                        //         : color
+                        //     }
+                        //     p="2"
+                        //     py="0"
+                        //   >
+                        //     <Text
+                        //       p="2"
+                        //       fontSize="0.8rem"
+                        //     >
+                        //       {subsec.title}
+                        //     </Text>
+                        //   </Button>
+                        // </Stack>
                       );
                     })}
-                  </Flex>
+                  </List>
                 </div>
               );
             })}
-          </Flex>
+          </List>
         )}
-
-        <Button
-          m="6"
-          onClick={toggleColorMode}
-        >
-          {colorMode === "light" ? <FiMoon /> : <FiSun color="#A0AEC0" />}
-        </Button>
-        <Button
-          m="6"
-          onClick={() => router.push("/dashboard/")}
-          color={color}
-        >
-          Dashboard
-        </Button>
       </Flex>
     </Box>
   );

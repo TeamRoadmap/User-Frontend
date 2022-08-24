@@ -11,6 +11,8 @@ import {
   useColorModeValue,
   Skeleton,
   IconButton,
+  Icon,
+  Image,
 } from "@chakra-ui/react";
 import { IoMdInformation } from "react-icons/io";
 import axios from "axios";
@@ -18,7 +20,8 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import NextLink from "next/link";
 import { BeatLoader } from "react-spinners";
-
+import { FaGit, FaNodeJs, FaReact } from "react-icons/fa";
+import { TbBrandDocker } from "react-icons/tb";
 const data = [
   {
     isNew: false,
@@ -90,6 +93,19 @@ export default function Home() {
     getType();
   }, []);
 
+  const Icon = (name) => {
+    switch (name) {
+      case "frontend":
+        return <FaReact size="1.4rem" />;
+      case "backend":
+        return <FaNodeJs size="1.4rem" />;
+      case "devops":
+        return <TbBrandDocker size="1.4rem" />;
+      case "git":
+        return <FaGit size="1.4rem" />;
+    }
+  };
+
   return (
     <Layout>
       <Head>
@@ -127,9 +143,9 @@ export default function Home() {
           you to follow along with ease.
         </Text>
         <Skeleton isLoaded={!loading}>
-          <Grid
-            templateColumns={{ base: "repeat(1, 1fr)", md: "repeat(2, 1fr)" }}
-            gap={6}
+          <SimpleGrid
+            columns={{ base: "1", md: "2", lg: "3" }}
+            spacing="4"
           >
             {loading && <BeatLoader color="#6B46C1" />}
             {types?.map((type) => {
@@ -148,11 +164,12 @@ export default function Home() {
                     direction={{ base: "column", md: "row" }}
                     p="1.5rem"
                     align="center"
+                    cursor="pointer"
                     gap="2rem"
                   >
                     <IconButton
                       color="purple.600"
-                      icon={<IoMdInformation size="2rem" />}
+                      icon={Icon(type.name)}
                     />
                     <Flex
                       direction="column"
@@ -167,7 +184,7 @@ export default function Home() {
                 </NextLink>
               );
             })}
-          </Grid>
+          </SimpleGrid>
         </Skeleton>
       </Stack>
     </Layout>

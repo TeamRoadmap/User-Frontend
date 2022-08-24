@@ -52,7 +52,7 @@ export default function SignUp() {
       const token = await response.user.getIdToken();
       dispatch(
         signUpHandler({
-          name: `${data.firstName} ${data.lastName}`,
+          name: `${data.firstName} ${data?.lastName}`,
           email: data.email,
           role: "user",
         })
@@ -123,7 +123,6 @@ export default function SignUp() {
                         type="text"
                         focusBorderColor="purple.500"
                         {...register("lastName")}
-                        required
                       />
                     </FormControl>
                   </Box>
