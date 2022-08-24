@@ -2,10 +2,12 @@ import { createSlice } from "@reduxjs/toolkit";
 
 
 const initialState = {
-  vote: undefined,
+  voted: {},
   course: [],
   section: [],
   sectionData: [],
+  courses: [],
+  sectionProgress: [],
   // contain all the courses's data in an array of object.
 };
 const courseSlice = createSlice({
@@ -13,7 +15,7 @@ const courseSlice = createSlice({
   initialState,
   reducers: {
     setVote: (state, action) => {
-      state.vote = action.payload;
+      state.voted = action.payload;
     },
     resetVote: (state) => {
       state.vote = undefined;
@@ -29,6 +31,12 @@ const courseSlice = createSlice({
     },
     resetSection: (state, action) => {
       state.sectionData = [];
+    },
+    setCourses: (state, action) => {
+      state.courses = action.payload;
+    },
+    setSectionProgress: (state, action) => {
+      state.sectionProgress = action.payload;
     },
   },
 });

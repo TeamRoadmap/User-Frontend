@@ -28,21 +28,110 @@ import parse, {
 import Image from "next/image";
 
 import Head from "next/head";
+import { async } from "@firebase/util";
+import { useTransform, useScroll } from "framer-motion";
 
 export const Course = () => {
   const notify = () => toast("Saved");
   const { token } = useSelector((state) => state.user);
   const { sectionData } = useSelector((state) => state.course);
   const [courseDetail, setCourseDetail] = useState();
+  const [scrollProgress, setScrollProgress] = useState();
   const [error, setError] = useState();
   const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
   const router = useRouter();
   const { course } = router.query;
   const contentColor = useColorModeValue("gray.700", "gray.200");
+  const { scrollYProgress } = useScroll();
 
   const linkColor = useColorModeValue("purple.500", "purple.200");
-  const codeColor = useColorModeValue("gray.100", "gray.700");
+  const codeColor = useColorModeValue("gray.200", "gray.700");
+
+  const getSectionCompletion = async () => {
+    try {
+      const res = await axios.get(
+        `https://roadmap-backend-host.herokuapp.com/api/v1/course/${course}/progress`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      dispatch({
+        type: "course/setSectionProgress",
+        payload: res.data.data.progress,
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const setSectionCompletion = async () => {
+    if (sectionData.type === "section") {
+      if (scrollProgress !== undefined && scrollProgress > 80) {
+        try {
+          const res = await axios.post(
+            `https://roadmap-backend-host.herokuapp.com/api/v1/course/${course}/progress`,
+            {
+              section_id: sectionData.id,
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+        } catch (err) {
+          console.log(err);
+        }
+      }
+    }
+    if (sectionData.type === "subsection") {
+      if (scrollProgress !== undefined && scrollProgress > 80) {
+        try {
+          const res = await axios.post(
+            `https://roadmap-backend-host.herokuapp.com/api/v1/course/${course}/progress`,
+            {
+              subsection_id: sectionData.id,
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          getSectionCompletion();
+        } catch (err) {
+          console.log(err);
+        }
+      }
+    }
+  };
+
+  const yRange = useTransform(scrollYProgress, [0, 1], [0, 100]);
+
+  useEffect(() => {
+    let ignore = false;
+    if (yRange.current === 100) {
+      if (!ignore) {
+        setScrollProgress(Math.trunc(yRange.current));
+      }
+    } else {
+      yRange.onChange((v) => {
+        if (!ignore) {
+          setScrollProgress(Math.trunc(yRange.current));
+        }
+      });
+    }
+    if (!ignore) {
+      setSectionCompletion();
+    }
+
+    return () => {
+      ignore = true;
+    };
+  }, [sectionData]);
 
   const options = {
     replace: (domNode) => {
@@ -166,18 +255,6 @@ export const Course = () => {
 
   return (
     <CourseLayout data={courseDetail}>
-      <Head>
-        <link
-          rel="stylesheet"
-          href={useColorModeValue(
-            "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/base16/google-light.min.css",
-            "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/github-dark.min.css"
-          )}
-          integrity="sha512-rO+olRTkcf304DQBxSWxln8JXCzTHlKnIdnMUwYvQa9/Jd4cQaNkItIUj6Z4nvW1dqK0SKXLbn9h4KwZTNtAyw=="
-          crossOrigin="anonymous"
-          referrerpolicy="no-referrer"
-        />
-      </Head>
       <Flex
         m={{ sm: "2", md: "6" }}
         gap="4"

@@ -34,18 +34,46 @@ import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 // import Courseimg from "/images/react-course.webp";
 
-const CourseCard = ({ title, id, description, public_id, genre_id }) => {
+const CourseCard = ({
+  title,
+  id,
+  description,
+  public_id,
+  vote,
+  type,
+  bookmarked,
+  enrolled,
+  coursesId,
+}) => {
   const { token, user } = useSelector((state) => state.user);
-  const { vote } = useSelector((state) => state.course);
-  const [votec, setVotec] = useState();
   const dispatch = useDispatch();
   const color = useColorModeValue("white", "gray.800");
+  const [loading, setLoading] = useState(false);
   const lastUpdatedColor = useColorModeValue("gray.600", "gray.300");
   const [bookmark, setbookmark] = useState(false);
-  const [enrolled, setEnrolled] = useState(false);
+  const [enroll, setEnroll] = useState(false);
+
+  const getCourseDetail = async () => {
+    try {
+      const res = await axios.get(
+        `https://roadmap-backend-host.herokuapp.com/api/v1/course?type=${coursesId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      dispatch({ type: "course/setCourses", payload: res.data.data });
+      setLoading(false);
+    } catch (err) {
+      setError("error occured");
+    }
+  };
 
   const onVote = async (data) => {
-    if (vote == undefined) {
+    setLoading(true);
+
+    if (vote === undefined) {
       try {
         const res = await axios.post(
           `https://roadmap-backend-host.herokuapp.com/api/v1/course/${public_id}/vote`,
@@ -58,9 +86,11 @@ const CourseCard = ({ title, id, description, public_id, genre_id }) => {
             },
           }
         );
-        setVotec(res.data.data.voteC.vote);
+        getCourseDetail();
       } catch (err) {}
     } else {
+      setLoading(true);
+
       try {
         const res = await axios.patch(
           `https://roadmap-backend-host.herokuapp.com/api/v1/course/${public_id}/vote`,
@@ -73,23 +103,19 @@ const CourseCard = ({ title, id, description, public_id, genre_id }) => {
             },
           }
         );
-        setVotec(res.data.data.vote.vote);
+        getCourseDetail();
       } catch (err) {
         console.log(err);
       }
     }
   };
 
-  useEffect(() => {
-    // dispatch({ type: "course/resetVote" });
-  }, [public_id]);
-
-  const onBookmark = async () => {
+  const onBookmark = async (data) => {
     try {
       const res = await axios.post(
         `https://roadmap-backend-host.herokuapp.com/api/v1/course/${public_id}/bookmark`,
         {
-          bookmark: "",
+          bookmark: data,
         },
         {
           headers: {
@@ -97,18 +123,18 @@ const CourseCard = ({ title, id, description, public_id, genre_id }) => {
           },
         }
       );
-      // dispatch({ type: "course/setVote", payload: data });
+      console.log(res);
     } catch (err) {
       console.log(err);
     }
   };
 
-  const onEnrollment = async () => {
+  const onEnrollment = async (data) => {
     try {
       const res = await axios.post(
         `https://roadmap-backend-host.herokuapp.com/api/v1/course/${public_id}/enrollment`,
         {
-          bookmark: "",
+          bookmark: data,
         },
         {
           headers: {
@@ -116,7 +142,7 @@ const CourseCard = ({ title, id, description, public_id, genre_id }) => {
           },
         }
       );
-      // dispatch({ type: "course/setVote", payload: data });
+      console.log(res);
     } catch (err) {
       console.log(err);
     }
@@ -132,15 +158,7 @@ const CourseCard = ({ title, id, description, public_id, genre_id }) => {
       pos={"relative"}
       zIndex={1}
     >
-      <Box maxW="full">
-        {/* <Img
-          p="4"
-          width="100%"
-          height="100%"
-          style={{ borderRadius: "1.2rem", objectFit: "contain" }}
-          src={data.imageURL}
-        /> */}
-      </Box>
+      <Box maxW="full"></Box>
 
       <Box px="4">
         <Flex
@@ -163,18 +181,16 @@ const CourseCard = ({ title, id, description, public_id, genre_id }) => {
             </Text>
             <ButtonGroup>
               <IconButton
-                variant={
-                  votec === undefined || votec == false ? "ghost" : "solid"
-                }
+                isLoading={loading}
+                variant={vote == undefined || vote == false ? "ghost" : "solid"}
                 onClick={() => onVote(true)}
                 colorScheme="green"
                 icon={<AiOutlineArrowUp />}
                 aria-label="upvote"
               />
               <IconButton
-                variant={
-                  votec === undefined || votec == true ? "ghost" : "solid"
-                }
+                isLoading={loading}
+                variant={vote == undefined || vote == true ? "ghost" : "solid"}
                 colorScheme="red"
                 onClick={() => onVote(false)}
                 icon={<AiOutlineArrowDown />}
@@ -197,14 +213,14 @@ const CourseCard = ({ title, id, description, public_id, genre_id }) => {
             <IconButton
               variant={bookmark ? "solid" : "ghost"}
               colorScheme="purple"
-              onClick={() => onBookmark()}
+              onClick={() => onBookmark(!bookmarked)}
               icon={<BsBookmark />}
               aria-label="bookmark"
             />
             <IconButton
               variant={enrolled ? "solid" : "ghost"}
               colorScheme="purple"
-              onClick={() => onEnrollment()}
+              onClick={() => onEnrollment(!enrolled)}
               icon={<AiOutlineSelect />}
               aria-label="saved"
             />

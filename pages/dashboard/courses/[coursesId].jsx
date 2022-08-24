@@ -21,25 +21,25 @@ import { BeatLoader } from "react-spinners";
 export const Courses = () => {
   const notify = () => toast("Saved");
   const { token } = useSelector((state) => state.user);
-  const [courseDetail, setCourseDetail] = useState();
+  const { courses } = useSelector((state) => state.course);
   const [error, setError] = useState();
   const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
   const router = useRouter();
-  const { courses } = router.query;
+  const { coursesId } = router.query;
 
   const getCourseDetail = async () => {
     setLoading(true);
     try {
       const res = await axios.get(
-        `https://roadmap-backend-host.herokuapp.com/api/v1/course?type=${courses}`,
+        `https://roadmap-backend-host.herokuapp.com/api/v1/course?type=${coursesId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
       );
-      setCourseDetail(res.data.data.courses);
+      dispatch({ type: "course/setCourses", payload: res.data.data });
       setLoading(false);
     } catch (err) {
       setError("error occured");
@@ -48,19 +48,7 @@ export const Courses = () => {
     // dispatch({ type: "course/setCourse", payload: res.data });
   };
 
-  // const updateSection = async () => {
-  //   const res = await axios.patch(
-  //     `https://e2b008aa-8ef7-4125-8063-532dfb7d0c2e.mock.pstmn.io/getSection?id=${editorSection.id}`,
-  //     {
-  //       title: editorSection.title,
-  //       description: editorSection.description,
-  //       content: editorSection.content,
-  //     }
-  //   );
-  //   notify();
-  // };
   useEffect(() => {
-    // dispatch({ type: "course/setCourseId", payload: courseId });
     getCourseDetail();
   }, []);
 
@@ -89,7 +77,7 @@ export const Courses = () => {
             templateColumns={{ base: "repeat(1, 1fr)", md: "repeat(2, 1fr)" }}
             gap={6}
           >
-            {courseDetail?.map((courseData) => {
+            {courses?.map((courseData) => {
               return (
                 <CourseCard
                   key={courseData.id}
@@ -98,14 +86,18 @@ export const Courses = () => {
                   image={courseData.image}
                   description={courseData.description}
                   public_id={courseData.public_id}
-                  genre_id={courses}
+                  type={courseData.type}
+                  vote={courseData.vote}
+                  bookmarked={courseData.bookmarked}
+                  enrolled={courseData.enrolled}
+                  coursesId={coursesId}
                 />
               );
             })}
           </Grid>
         </Skeleton>
         {/* {error && <Err} */}
-        {courseDetail?.length === 0 && (
+        {courses?.length === 0 && (
           <Heading fontSize="1rem">
             We will have more courses on our platform soon!
           </Heading>
