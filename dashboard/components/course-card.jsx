@@ -2,7 +2,6 @@ import {
   Flex,
   Circle,
   Box,
-  Image,
   Badge,
   useColorModeValue,
   Icon,
@@ -29,10 +28,11 @@ import {
 import { BsBookmark, BsStar, BsStarFill, BsStarHalf } from "react-icons/bs";
 import { FiShoppingCart } from "react-icons/fi";
 import NextLink from "next/link";
+import Image from "next/image";
+
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
-// import Courseimg from "/images/react-course.webp";
 
 const CourseCard = ({
   title,
@@ -42,8 +42,8 @@ const CourseCard = ({
   vote,
   type,
   bookmarked,
-  enrolled,
   coursesId,
+  image,
 }) => {
   const { token, user } = useSelector((state) => state.user);
   const dispatch = useDispatch();
@@ -65,9 +65,8 @@ const CourseCard = ({
       dispatch({ type: "course/setCourses", payload: res.data.data });
       setLoading(false);
       setBookLoading(false);
-      setEnrollLoading(false);
     } catch (err) {
-      setError("error occured");
+      console.log(err);
     }
   };
 
@@ -145,8 +144,6 @@ const CourseCard = ({
     }
   };
 
-
-
   return (
     <Box
       maxW={"full"}
@@ -157,7 +154,39 @@ const CourseCard = ({
       pos={"relative"}
       zIndex={1}
     >
-      <Box maxW="full"></Box>
+      <Box
+        maxW="full"
+        p="2"
+        mb="8"
+      >
+        {image !== null ? (
+          <Image
+            alt="img"
+            p="4"
+            width="4"
+            height="2"
+            layout="responsive"
+            style={{
+              borderRadius: "8px",
+              objectFit: "contain",
+            }}
+            src={image}
+          />
+        ) : (
+          <Image
+            alt="dummyimg"
+            p="4"
+            width="4"
+            height="2"
+            layout="responsive"
+            style={{
+              borderRadius: "8px",
+              objectFit: "contain",
+            }}
+            src="/images/dummy-img.webp"
+          />
+        )}
+      </Box>
 
       <Box px="4">
         <Flex
@@ -171,7 +200,7 @@ const CourseCard = ({
           >
             <Text
               as="p"
-              fontSize="md"
+              fontSize="xl"
               fontWeight="semibold"
               casing="capitalize"
               color={useColorModeValue("gray.700", "gray.200")}
@@ -204,7 +233,7 @@ const CourseCard = ({
           >
             <Text
               as="p"
-              fontSize="md"
+              fontSize="lg"
               color={lastUpdatedColor}
             >
               {description}
@@ -214,61 +243,15 @@ const CourseCard = ({
               variant={bookmarked ? "solid" : "ghost"}
               colorScheme="purple"
               onClick={() => onBookmark(!bookmarked)}
-              icon={<BsBookmark />}
+              icon={<BsBookmark size="1.4rem" />}
               aria-label="bookmark"
             />
           </Flex>
-          <Flex></Flex>
           <NextLink href={`/dashboard/courses/course/${public_id}`}>
             <Button>Learn more</Button>
           </NextLink>
         </Flex>
       </Box>
-      {/* <Divider
-        orientation="horizontal"
-        w="100"
-        p="2"
-      />
-      <ButtonGroup
-        p="4"
-        variant="link"
-        bg="none"
-        style={{ display: "flex", justifyContent: "space-around" }}
-      >
-        <Button
-          bg="none"
-          rightIcon={<AiOutlineEye />}
-        >
-          Preview
-        </Button>
-
-        <Divider
-          orientation="vertical"
-          w="100"
-          p="2"
-        />
-        {/* <NextLink href={`/dashboard/course/${public_id}`}> */}
-      {/* <Button
-          bg="none"
-          rightIcon={<AiOutlineEdit />}
-        >
-          {" "}
-          Edit
-        </Button>
-        {/* </NextLink> */}
-      {/* <Divider
-          orientation="vertical"
-          w="100"
-          p="2"
-        />
-        <Button
-          bg="none"
-          rightIcon={<AiOutlineInfoCircle />}
-        >
-          {" "}
-          Info
-        </Button>
-      </ButtonGroup>  */}
     </Box>
   );
 };

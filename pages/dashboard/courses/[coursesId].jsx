@@ -27,7 +27,6 @@ export const Courses = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   const { coursesId } = router.query;
-
   const getCourseDetail = async () => {
     setLoading(true);
     try {
