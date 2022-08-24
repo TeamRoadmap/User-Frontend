@@ -14,8 +14,23 @@ const persistConfig = {
     return Promise.resolve(state);
   },
 };
-const reducers = combineReducers({ user: userReducer, course: courseReducer });
-const persistedReducer = persistReducer(persistConfig, reducers);
+
+const coursePersistConfig = {
+  key: "course",
+  storage: storage,
+  blacklist: ["section"],
+};
+const rootReducer = combineReducers({
+  course: persistReducer(coursePersistConfig, courseReducer),
+  user: userReducer,
+});
+const persistedReducer = persistReducer(persistConfig, rootReducer);
+
+// const reducers = combineReducers({
+//   user: userReducer,
+//   course: persistConfig(coursePersistConfig, courseReducer),
+// });
+// const persistedReducer = persistReducer(persistConfig, reducers);
 export const store = configureStore({
   reducer: persistedReducer,
   middleware: (getDefaultMiddleware) =>
@@ -24,3 +39,5 @@ export const store = configureStore({
     }),
 });
 export const persistor = persistStore(store);
+
+

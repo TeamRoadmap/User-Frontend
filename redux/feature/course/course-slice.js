@@ -1,6 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-
 const initialState = {
   voted: {},
   course: [],
@@ -8,6 +7,8 @@ const initialState = {
   sectionData: [],
   courses: [],
   sectionProgress: [],
+  courseLoading: false,
+  sectionLoading: false,
   // contain all the courses's data in an array of object.
 };
 const courseSlice = createSlice({
@@ -25,12 +26,14 @@ const courseSlice = createSlice({
     },
     setSection: (state, action) => {
       state.section = action.payload;
+      state.sectionLoading = false;
     },
     setSectionData: (state, action) => {
       state.sectionData = action.payload;
     },
     resetSection: (state, action) => {
-      state.sectionData = [];
+      state.section = [];
+      state.sectionLoading = true;
     },
     setCourses: (state, action) => {
       state.courses = action.payload;

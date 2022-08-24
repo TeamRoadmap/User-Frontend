@@ -10,9 +10,9 @@ export default function CourseLayout({ children }) {
     >
       <Box
         as="section"
-        bg="#F9F9F6"
         _dark={{ bg: "gray.800" }}
         minH="100vh"
+        w="66"
       >
         <CourseSidebar />
         <Box

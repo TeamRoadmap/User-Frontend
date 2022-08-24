@@ -13,6 +13,7 @@ import {
   useDisclosure,
   Stack,
   Divider,
+  Skeleton,
 } from "@chakra-ui/react";
 import {
   AiOutlineContainer,
@@ -28,12 +29,18 @@ import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import axios from "axios";
+import { useEffect } from "react";
+import { BeatLoader, GridLoader } from "react-spinners";
 
 const CourseSidebar = ({ data }) => {
   const { colorMode, toggleColorMode } = useColorMode();
-  const { section, course } = useSelector((state) => state.course);
+  const { section, course, sectionProgress, sectionLoading } = useSelector(
+    (state) => state.course
+  );
   const { token } = useSelector((state) => state.user);
   const [activeSection, setActiveSection] = useState();
+  const [progress, setProgress] = useState();
+  const [loading, setLoading] = useState(false);
   // const [activeSubSection, setActiveSubSection] = useState();
   const sidebar = useDisclosure();
   const color = useColorModeValue("gray.600", "gray.300");
@@ -43,6 +50,8 @@ const CourseSidebar = ({ data }) => {
   const router = useRouter();
 
   const getSectionData = async (sectionId) => {
+    setLoading(true);
+
     try {
       const res = await axios.get(
         `https://roadmap-backend-host.herokuapp.com/api/v1/section/${sectionId}`,
@@ -56,14 +65,17 @@ const CourseSidebar = ({ data }) => {
         type: "course/setSectionData",
         payload: { ...res.data.data.section, type: "section" },
       });
+      setLoading(false);
       setActiveSection(`${sectionId}`);
     } catch (err) {
       console.log(err);
       setActiveSection(false);
     }
   };
+
   const getSubsectionData = async (id) => {
     try {
+      setLoading(true);
       const res = await axios.get(
         `https://roadmap-backend-host.herokuapp.com/api/v1/subsection/${id}`,
         {
@@ -76,6 +88,7 @@ const CourseSidebar = ({ data }) => {
         type: "course/setSectionData",
         payload: { ...res.data.data.subsection, type: "subsection" },
       });
+      setLoading(false);
       if (activeSection !== id) {
         setActiveSection(`${id}`);
       } else {
@@ -134,7 +147,6 @@ const CourseSidebar = ({ data }) => {
       pb="10"
       overflowX="hidden"
       overflowY="auto"
-      bg="white"
       _dark={{ bg: "gray.900" }}
       border
       borderColor={useColorModeValue("gray.100", "gray.700")}
@@ -150,15 +162,19 @@ const CourseSidebar = ({ data }) => {
         justify="space-between"
         gap="4"
       >
-        <Text
-          fontSize="xl"
-          ml="2"
-          color="brand.500"
-          _dark={{ color: "white" }}
-          fontWeight="bold"
-        >
-          {course?.title}
-        </Text>
+        <Skeleton isLoaded={!loading}>
+          <Text
+            fontSize="xl"
+            mt={{ sm: "2", md: "4" }}
+            ml="2"
+            color="brand.500"
+            _dark={{ color: "white" }}
+            fontWeight="bold"
+          >
+            {course?.title}
+          </Text>
+        </Skeleton>
+
         <IconButton
           aria-label="Menu"
           display={{ base: "inline-flex", md: "none" }}
@@ -186,79 +202,84 @@ const CourseSidebar = ({ data }) => {
         >
           Sections
         </Text>
-        <Flex
-          direction="column"
-          align="left"
-          mx="4"
-        >
-          {section?.map((data) => {
-            return (
-              <div key={data.order}>
-                <Stack
-                  direction="row"
-                  alignItems="center"
-                  h="50px"
-                >
-                  <Divider orientation="vertical" />
-                  <Button
-                    variant="link"
-                    p="2"
-                    py="0"
-                    onClick={() => getSectionData(data.public_id)}
-                    color={
-                      activeSection == `${data.public_id}`
-                        ? selectedColor
-                        : color
-                    }
+        {sectionLoading ? (
+          <GridLoader color="#6B46C1" />
+        ) : (
+          <Flex
+            direction="column"
+            align="left"
+            mx="4"
+          >
+            {section?.map((data) => {
+              return (
+                <div key={data.order}>
+                  <Stack
+                    direction="row"
+                    alignItems="center"
+                    h="50px"
                   >
-                    <Text
-                      textOverflow="ellipsis"
-                      fontSize="1rem"
+                    <Divider orientation="vertical" />
+                    <Button
+                      variant="link"
+                      p="2"
+                      py="0"
+                      onClick={() => getSectionData(data.public_id)}
+                      color={
+                        activeSection == `${data.public_id}`
+                          ? selectedColor
+                          : color
+                      }
                     >
-                      {data.title}
-                    </Text>
-                  </Button>
-                </Stack>
-
-                <Flex direction="column">
-                  {data?.subsections?.map((subsec, id) => {
-                    return (
-                      <Stack
-                        key={subsec?.id}
-                        direction="row"
-                        alignItems="flex-start"
-                        h="50px"
-                        px={4}
-                        py="2"
+                      <Text
+                        textOverflow="ellipsis"
+                        fontSize="1rem"
                       >
-                        <Divider orientation="vertical" />
-                        <Button
-                          variant="link"
-                          textTransform="capitalize"
-                          onClick={() => getSubsectionData(subsec.public_id)}
-                          color={
-                            activeSection == `${subsec.public_id}`
-                              ? selectedColor
-                              : color
-                          }
-                          p="2"
-                          py="0"
+                        {data.title}
+                      </Text>
+                    </Button>
+                  </Stack>
+
+                  <Flex direction="column">
+                    {data?.subsections?.map((subsec, id) => {
+                      return (
+                        <Stack
+                          key={subsec?.id}
+                          direction="row"
+                          alignItems="flex-start"
+                          h="50px"
+                          px={4}
+                          py="2"
                         >
-                          <Text
+                          <Divider orientation="vertical" />
+                          <Button
+                            variant="link"
+                            textTransform="capitalize"
+                            onClick={() => getSubsectionData(subsec.public_id)}
+                            color={
+                              activeSection == `${subsec.public_id}`
+                                ? selectedColor
+                                : color
+                            }
                             p="2"
-                            fontSize="0.8rem"
+                            py="0"
                           >
-                            {subsec.title}
-                          </Text>
-                        </Button>
-                      </Stack>
-                    );
-                  })}
-                </Flex>
-              </div>
-            );
-          })}
-        </Flex>
+                            <Text
+                              p="2"
+                              fontSize="0.8rem"
+                            >
+                              {subsec.title}
+                            </Text>
+                          </Button>
+                        </Stack>
+                      );
+                    })}
+                  </Flex>
+                </div>
+              );
+            })}
+          </Flex>
+        )}
+
         <Button
           m="6"
           onClick={toggleColorMode}
@@ -278,7 +299,7 @@ const CourseSidebar = ({ data }) => {
   return (
     <Box
       as="section"
-      bg="#F9F9F6"
+      bg="white"
       _dark={{ bg: "gray.800" }}
     >
       <SidebarContent display={{ base: "none", md: "unset" }} />
