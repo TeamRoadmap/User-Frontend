@@ -10,6 +10,7 @@ import {
   Stack,
   Text,
   Skeleton,
+  SimpleGrid,
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useDispatch } from "react-redux";
@@ -69,14 +70,19 @@ export const Courses = () => {
         <Stack direction="column">
           <Heading>{genreList[courses]}</Heading>
         </Stack>
-        <Skeleton isLoaded={!loading}>
-          {loading && <BeatLoader color="#6B46C1" />}
-          <Grid
-            templateColumns={{ base: "repeat(1, 1fr)", md: "repeat(2, 1fr)" }}
-            gap={6}
-          >
-            {courses?.map((courseData) => {
-              return (
+
+        <SimpleGrid
+          columns={{ base: "1", md: "2", lg: "3" }}
+          spacing="4"
+        >
+          {courses?.map((courseData) => {
+            return (
+              <Skeleton
+                key={courseData.id}
+                isLoaded={!loading}
+              >
+                {loading && <BeatLoader color="#6B46C1" />}
+
                 <CourseCard
                   key={courseData.id}
                   title={courseData.title}
@@ -90,10 +96,10 @@ export const Courses = () => {
                   enrolled={courseData.enrolled}
                   coursesId={coursesId}
                 />
-              );
-            })}
-          </Grid>
-        </Skeleton>
+              </Skeleton>
+            );
+          })}
+        </SimpleGrid>
         {/* {error && <Err} */}
         {courses?.length === 0 && !loading && (
           <Heading fontSize="1rem">
