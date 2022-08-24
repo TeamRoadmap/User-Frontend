@@ -28,6 +28,7 @@ export const Courses = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   const { coursesId } = router.query;
+
   const getCourseDetail = async () => {
     setLoading(true);
     try {
@@ -68,7 +69,7 @@ export const Courses = () => {
         align="left"
       >
         <Stack direction="column">
-          <Heading>{genreList[courses]}</Heading>
+          <Heading>{genreList[coursesId]}</Heading>
         </Stack>
 
         <SimpleGrid
