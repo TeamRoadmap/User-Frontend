@@ -61,7 +61,6 @@ export default function Login() {
   return (
     <Layout>
       <Flex
-        minH={"105vh"}
         align={"center"}
         justify={"center"}
         bg={useColorModeValue("gray.50", "gray.800")}
@@ -70,7 +69,7 @@ export default function Login() {
           spacing={8}
           mx={"auto"}
           maxW={"lg"}
-          py={12}
+          py={6}
           px={6}
         >
           <Stack align={"center"}>
@@ -106,14 +105,15 @@ export default function Login() {
                       pattern: {
                         value:
                           /^[a-z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-z0-9-]+(?:\.[a-z0-9-]+)*$/,
-                        message:
-                          "Please enter valid email (lowercase letter)",
+                        message: "Please enter valid email (lowercase letter)",
                       },
                     })}
                     required
                   />
                 </FormControl>
-                {errors?.email?.message && <Text color="red">{errors?.email?.message}</Text>}
+                {errors?.email?.message && (
+                  <Text color="red">{errors?.email?.message}</Text>
+                )}
                 <FormControl id="password">
                   <FormLabel>Password</FormLabel>
                   <InputGroup>
@@ -121,9 +121,9 @@ export default function Login() {
                       focusBorderColor="purple.500"
                       type={showPassword ? "text" : "password"}
                       {...register("password", {
-                        minLength:{
+                        minLength: {
                           value: 6,
-                          message: "Please enter min 6 characters"
+                          message: "Please enter min 6 characters",
                         },
                       })}
                       required
@@ -139,7 +139,9 @@ export default function Login() {
                       </Button>
                     </InputRightElement>
                   </InputGroup>
-                  {errors?.password?.message && <Text color="red">{errors?.password?.message}</Text>}
+                  {errors?.password?.message && (
+                    <Text color="red">{errors?.password?.message}</Text>
+                  )}
                 </FormControl>
                 <Stack spacing={10}>
                   <Stack

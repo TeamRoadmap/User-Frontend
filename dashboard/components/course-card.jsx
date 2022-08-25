@@ -145,73 +145,62 @@ const CourseCard = ({
   };
 
   return (
-    <Box
-      maxW={"full"}
-      h="full"
-      bg={useColorModeValue("white", "gray.800")}
-      boxShadow={"md"}
-      rounded={"md"}
-      pos={"relative"}
-      zIndex={1}
-    >
+    <NextLink href={`/dashboard/courses/course/${public_id}`}>
       <Box
-        maxW="full"
-        p="2"
-        mb="2"
+        cursor="pointer"
+        maxW={"full"}
+        h="full"
+        bg={useColorModeValue("white", "gray.800")}
+        boxShadow={"lg"}
+        rounded={"md"}
+        m="2"
+        pos={"relative"}
+        zIndex={1}
       >
-        <NextLink href={`/dashboard/courses/course/${public_id}`}>
-          {image !== null ? (
-            <Image
-              alt="img"
-              p="4"
-              width="4"
-              height="2"
-              layout="responsive"
-              style={{
-                borderRadius: "8px",
-                objectFit: "contain",
-                cursor: "pointer",
-              }}
-              src={image}
-            />
-          ) : (
-            <Image
-              alt="dummyimg"
-              p="4"
-              width="4"
-              height="2"
-              layout="responsive"
-              style={{
-                borderRadius: "8px",
-                objectFit: "contain",
-                cursor: "pointer",
-              }}
-              src="/images/dummy-img.webp"
-            />
-          )}
-        </NextLink>
-      </Box>
-
-      <Box px="4">
-        <Flex
-          direction="column"
-          gap="6"
-          pb="2"
+        <Box
+          maxW="full"
+          p="2"
+          mb="2"
         >
+          <NextLink href={`/dashboard/courses/course/${public_id}`}>
+            {image !== null ? (
+              <Image
+                alt="img"
+                p="4"
+                width="4"
+                height="2"
+                layout="responsive"
+                style={{
+                  borderRadius: "8px",
+                  objectFit: "contain",
+                  cursor: "pointer",
+                }}
+                src={image}
+              />
+            ) : (
+              <Image
+                alt="dummyimg"
+                p="4"
+                width="4"
+                height="2"
+                layout="responsive"
+                style={{
+                  borderRadius: "8px",
+                  objectFit: "contain",
+                  cursor: "pointer",
+                }}
+                src="/images/dummy-img.webp"
+              />
+            )}
+          </NextLink>
+        </Box>
+
+        <Box px="4">
           <Flex
-            direction="row"
-            justifyContent="space-between"
-            alignItems="center"
+            direction="column"
+            gap="6"
+            pb="4"
           >
-            <Text
-              as="p"
-              fontSize="xl"
-              fontWeight="semibold"
-              casing="capitalize"
-              color={useColorModeValue("gray.700", "gray.200")}
-            >
-              {title}
-            </Text>
             <ButtonGroup>
               <Tooltip label="Upvote">
                 <IconButton
@@ -248,20 +237,32 @@ const CourseCard = ({
                 />
               </Tooltip>
             </ButtonGroup>
+            <Flex
+              direction="column"
+              justifyContent="space-between"
+              py="2"
+            >
+              <Text
+                as="p"
+                fontSize="xl"
+                fontWeight="semibold"
+                casing="capitalize"
+                color={useColorModeValue("gray.700", "gray.200")}
+              >
+                {title}
+              </Text>
+              <Text
+                as="p"
+                fontSize="lg"
+                color={lastUpdatedColor}
+              >
+                {description}
+              </Text>
+            </Flex>
           </Flex>
-          <Text
-            as="p"
-            fontSize="lg"
-            color={lastUpdatedColor}
-          >
-            {description}
-          </Text>
-          <NextLink href={`/dashboard/courses/course/${public_id}`}>
-            <Button>Learn more</Button>
-          </NextLink>
-        </Flex>
+        </Box>
       </Box>
-    </Box>
+    </NextLink>
   );
 };
 
