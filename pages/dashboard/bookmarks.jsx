@@ -90,6 +90,7 @@ export default function Bookmarks() {
                   <GridItem
                     colSpan={2}
                     key={bookmark.course.id}
+                    cursor="pointer"
                   >
                     <NextLink
                       href={`/dashboard/courses/course/${bookmark?.course.public_id}`}

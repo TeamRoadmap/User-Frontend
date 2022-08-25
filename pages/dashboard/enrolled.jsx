@@ -90,6 +90,7 @@ export default function Enrolled() {
                   <GridItem
                     colSpan={2}
                     key={enrolled.course.id}
+                    cursor="pointer"
                   >
                     <NextLink
                       href={`/dashboard/courses/course/${enrolled?.course.public_id}`}
