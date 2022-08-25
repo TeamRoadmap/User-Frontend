@@ -18,8 +18,9 @@ import {
   AiOutlineHome,
   AiOutlineLeft,
   AiOutlineRight,
-  AiOutlineSetting,
+  AiOutlineFileDone,
 } from "react-icons/ai";
+import { BsBookmarkCheck } from "react-icons/bs";
 import { FiLogOut, FiMoon, FiSun } from "react-icons/fi";
 import React from "react";
 import NavLink from "../../shared/components/nav-link";
@@ -145,10 +146,10 @@ const Sidebar = () => {
           <NavItem icon={AiOutlineContainer}>Leaderboard</NavItem>
         </NavLink> */}
         <NavLink to="/dashboard/bookmarks">
-          <NavItem icon={AiOutlineFund}>Bookmarks</NavItem>
+          <NavItem icon={BsBookmarkCheck}>Bookmarks</NavItem>
         </NavLink>
         <NavLink to="/dashboard/enrolled">
-          <NavItem icon={AiOutlineSetting}>Enrolled</NavItem>
+          <NavItem icon={AiOutlineFileDone}>Enrolled</NavItem>
         </NavLink>
         {/* <NavLink to="/dashboard/settings">
           <NavItem icon={AiOutlineSetting}>Settings</NavItem>
