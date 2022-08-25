@@ -34,7 +34,7 @@ export default function Login() {
   const { token, loading, error } = useSelector((state) => state.user);
   const router = useRouter();
 
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, formState: { errors } } = useForm();
 
   useEffect(() => {
     if (token !== "") {
@@ -105,21 +105,27 @@ export default function Login() {
                     {...register("email", {
                       pattern: {
                         value:
-                          /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
+                          /^[a-z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-z0-9-]+(?:\.[a-z0-9-]+)*$/,
                         message:
-                          "Only alphabets, numbers and hyphens (-) are allowed",
+                          "Please enter valid email (lowercase letter)",
                       },
                     })}
                     required
                   />
                 </FormControl>
+                {errors?.email?.message && <Text color="red">{errors?.email?.message}</Text>}
                 <FormControl id="password">
                   <FormLabel>Password</FormLabel>
                   <InputGroup>
                     <Input
                       focusBorderColor="purple.500"
                       type={showPassword ? "text" : "password"}
-                      {...register("password")}
+                      {...register("password", {
+                        minLength:{
+                          value: 6,
+                          message: "Please enter min 6 characters"
+                        },
+                      })}
                       required
                     />
                     <InputRightElement h={"full"}>
@@ -133,6 +139,7 @@ export default function Login() {
                       </Button>
                     </InputRightElement>
                   </InputGroup>
+                  {errors?.password?.message && <Text color="red">{errors?.password?.message}</Text>}
                 </FormControl>
                 <Stack spacing={10}>
                   <Stack

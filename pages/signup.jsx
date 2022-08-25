@@ -36,7 +36,7 @@ export default function SignUp() {
   const dispatch = useDispatch();
   const { token, user, loading, error } = useSelector((state) => state.user);
   const router = useRouter();
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, formState: { errors } } = useForm();
   useEffect(() => {
     if (token !== "") {
       router.push("/dashboard", undefined, { shallow: true });
@@ -138,14 +138,15 @@ export default function SignUp() {
                     {...register("email", {
                       pattern: {
                         value:
-                          /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
+                        /^[a-z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-z0-9-]+(?:\.[a-z0-9-]+)*$/,
                         message:
-                          "Only alphabets, numbers and hyphens (-) are allowed",
+                        "Please enter valid email (lowercase letter)",
                       },
                     })}
                     required
                   />
                 </FormControl>
+                {errors?.email?.message && <Text color="red">{errors?.email?.message}</Text>}
                 <FormControl
                   id="password"
                   isRequired
@@ -155,7 +156,12 @@ export default function SignUp() {
                     <Input
                       focusBorderColor="purple.500"
                       type={showPassword ? "text" : "password"}
-                      {...register("password")}
+                      {...register("password", {
+                        minLength:{
+                          value: 6,
+                          message: "Please enter min 6 characters"
+                        },
+                      })}
                       required
                     />
                     <InputRightElement h={"full"}>
@@ -169,6 +175,7 @@ export default function SignUp() {
                       </Button>
                     </InputRightElement>
                   </InputGroup>
+                  {errors?.password?.message && <Text color="red">{errors?.password?.message}</Text>}
                 </FormControl>
                 <Stack
                   spacing={10}
