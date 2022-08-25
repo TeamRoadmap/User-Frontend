@@ -315,6 +315,7 @@ const CourseSidebar = ({ data }) => {
                       return (
                         <ListItem
                           align="center"
+                          mx="4"
                           onClick={() => getSubsectionData(subsec.public_id)}
                           cursor="pointer"
                           key={subsec?.id}
@@ -337,7 +338,9 @@ const CourseSidebar = ({ data }) => {
                             }
                           >
                             <Text
+                              as="span"
                               py="2"
+                              noOfLines={3}
                               fontSize="0.9rem"
                             >
                               {subsec.title}
