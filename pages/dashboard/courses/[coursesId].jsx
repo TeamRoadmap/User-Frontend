@@ -76,30 +76,32 @@ export const Courses = () => {
           columns={{ base: "1", md: "2", lg: "3" }}
           spacing="4"
         >
-          {courses?.map((courseData) => {
-            return (
-              <Skeleton
-                key={courseData.id}
-                isLoaded={!loading}
-              >
-                {loading && <BeatLoader color="#6B46C1" />}
-
-                <CourseCard
+          {courses
+            ?.map((courseData) => {
+              return (
+                <Skeleton
                   key={courseData.id}
-                  title={courseData.title}
-                  id={courseData.id}
-                  image={courseData.image}
-                  description={courseData.description}
-                  public_id={courseData.public_id}
-                  type={courseData.type}
-                  vote={courseData.vote}
-                  bookmarked={courseData.bookmarked}
-                  enrolled={courseData.enrolled}
-                  coursesId={coursesId}
-                />
-              </Skeleton>
-            );
-          })}
+                  isLoaded={!loading}
+                >
+                  {loading && <BeatLoader color="#6B46C1" />}
+
+                  <CourseCard
+                    key={courseData.id}
+                    title={courseData.title}
+                    id={courseData.id}
+                    image={courseData.image}
+                    description={courseData.description}
+                    public_id={courseData.public_id}
+                    type={courseData.type}
+                    vote={courseData.vote}
+                    bookmarked={courseData.bookmarked}
+                    enrolled={courseData.enrolled}
+                    coursesId={coursesId}
+                  />
+                </Skeleton>
+              );
+            })
+            .reverse()}
         </SimpleGrid>
         {/* {error && <Err} */}
         {courses?.length === 0 && !loading && (

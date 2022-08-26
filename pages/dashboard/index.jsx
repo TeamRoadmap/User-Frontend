@@ -139,8 +139,7 @@ export default function Home() {
           </Text>{" "}
         </Heading>
         <Text>
-          Browse Interactive courses created with our top creator which allows
-          you to follow along with ease.
+          Browse all our courses created by great creators in these domains.
         </Text>
         <Skeleton isLoaded={!loading}>
           <SimpleGrid
