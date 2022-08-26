@@ -11,6 +11,7 @@ import {
 } from "@chakra-ui/react";
 import Image from "next/image";
 import HeaderImage from "../../public/images/user-dashboard.svg";
+import DashBoardImg from "../../public/images/dashboard.png";
 import Link from "next/link";
 
 const Header = () => {
@@ -57,17 +58,17 @@ const Header = () => {
 					</Stack>
 				</Flex>
 				<Flex
-					py="6rem"
 					px={{ base: "0", md: "2rem" }}
 					flex={1}
 					justify={"center"}
 					align={{ base: "flex-end", md: "center" }}
 				>
+					<div style={{borderRadius: "8px", boxShadow: "0px 0px 40px 20px rgba(0, 0, 0, 0.05)"}}>
 					<Image
 						alt={"Header Image"}
-						style={{ borderRadius: "8px" }}
-						src={HeaderImage}
+						src={DashBoardImg}
 					/>
+					</div>
 				</Flex>
 			</Stack>
 		</>

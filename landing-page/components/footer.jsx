@@ -8,6 +8,7 @@ import {
   useColorModeValue,
   useBreakpointValue,
 } from "@chakra-ui/react";
+import Link from "next/link";
 
 export default function Footer() {
 	const testimonialBg = useColorModeValue("gray.100", "gray.700");
@@ -29,6 +30,7 @@ export default function Footer() {
           <Text fontSize={"md"}>Sign Up</Text>
         </Flex>
         <Flex gap={"1rem"}>
+        <Link href="/signup" passHref>
           <Button
             fontSize={"sm"}
             fontWeight={600}
@@ -42,6 +44,7 @@ export default function Footer() {
           >
             Sign Up
           </Button>
+          </Link>
           {/* <Button
             as={"a"}
             fontSize={"sm"}
