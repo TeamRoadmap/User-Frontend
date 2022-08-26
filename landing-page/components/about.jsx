@@ -58,10 +58,13 @@ const About = () => {
           justify={"center"}
           align={{ base: "flex-end", md: "center" }}
         >
-          <Image
-            alt={"courses Image"}
-            style={{borderRadius:"8px"}}
-            src={Courses}
+          <img
+            alt="courses Image"
+            src="/images/courses.png"
+            style={{
+              borderRadius: "8px",
+              boxShadow: "0px 0px 40px 20px rgba(0, 0, 0, 0.05)",
+            }}
           />
         </Flex>
       </Stack>
@@ -109,7 +112,7 @@ const About = () => {
           <Image
             alt={"Vote Image"}
             src={Vote}
-            style={{borderRadius: "8px"}}
+            style={{ borderRadius: "8px" }}
           />
         </Flex>
       </Stack>
@@ -145,14 +148,14 @@ const About = () => {
                       as={"span"}
                       position={"relative"}
                     >
-                    Enroll Courses which are Easy to follow
+                      Enroll Courses which are Easy to follow
                     </Text>
                   </Heading>
                   <Text
                     fontSize={{ base: "md", lg: "lg" }}
                     color={useColorModeValue("gray.700", "gray.300")}
                   >
-                  Learn from Well Structured, Segregated and reviewed coures
+                    Learn from Well Structured, Segregated and reviewed coures
                   </Text>
                 </Flex>
               </Box>
@@ -177,7 +180,8 @@ const About = () => {
                     fontSize={{ base: "md", lg: "lg" }}
                     color={useColorModeValue("gray.700", "gray.300")}
                   >
-                   Bookmark your Courses for later While Browsing different courses
+                    Bookmark your Courses for later While Browsing different
+                    courses
                   </Text>
                 </Flex>
               </Box>
