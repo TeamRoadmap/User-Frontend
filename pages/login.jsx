@@ -144,14 +144,6 @@ export default function Login() {
                   )}
                 </FormControl>
                 <Stack spacing={10}>
-                  <Stack
-                    direction={{ base: "column", sm: "row" }}
-                    align={"start"}
-                    justify={"space-between"}
-                  >
-                    <Checkbox colorScheme="purple">Remember me</Checkbox>
-                    <Link color={"purple.400"}>Forgot password?</Link>
-                  </Stack>
                   {error?.length > 0 ? (
                     <Alert
                       status="error"

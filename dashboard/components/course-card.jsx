@@ -145,9 +145,7 @@ const CourseCard = ({
   };
 
   return (
-    <NextLink href={`/dashboard/courses/course/${public_id}`}>
       <Box
-        cursor="pointer"
         maxW={"full"}
         h="full"
         bg={useColorModeValue("white", "gray.800")}
@@ -237,7 +235,9 @@ const CourseCard = ({
                 />
               </Tooltip>
             </ButtonGroup>
+            <NextLink href={`/dashboard/courses/course/${public_id}`}>
             <Flex
+              cursor="pointer"
               direction="column"
               justifyContent="space-between"
               py="2"
@@ -259,10 +259,10 @@ const CourseCard = ({
                 {description}
               </Text>
             </Flex>
+            </NextLink>
           </Flex>
         </Box>
       </Box>
-    </NextLink>
   );
 };
 
