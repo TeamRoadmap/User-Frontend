@@ -26,15 +26,20 @@ import { loginHandler } from "../redux/feature/user/thunk";
 import { FiAlertCircle } from "react-icons/fi";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../shared/lib/firebase";
-import { toast } from 'react-toastify';
+
+import { toast } from "react-toastify";
 export default function Login() {
-  const notify = () => toast("logged in succesfully")
+  const notify = () => toast("logged in succesfully");
   const [showPassword, setShowPassword] = useState(false);
   const dispatch = useDispatch();
   const { token, loading, error } = useSelector((state) => state.user);
   const router = useRouter();
 
-  const { register, handleSubmit, formState: { errors } } = useForm();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
 
   useEffect(() => {
     if (token !== "") {

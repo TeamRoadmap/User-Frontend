@@ -9,6 +9,7 @@ import { useRouter } from "next/router";
 import { PersistGate } from "redux-persist/lib/integration/react";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import UserProvider from "../shared/components/user-provider";
 
 function MyApp({ Component, pageProps }) {
   const route = useRouter();
@@ -19,29 +20,31 @@ function MyApp({ Component, pageProps }) {
         loading={null}
         persistor={persistor}
       >
-        <Chakra
-          cookies={pageProps.cookies}
-          theme={theme}
-          cssVarsRoot="body"
-        >
-          {publicPaths.includes(route.pathname) ? (
-            <>
-              <CSSReset />
-              <Component {...pageProps} />
-            </>
-          ) : (
-            <ProtectedPath>
-              <CSSReset />
-              <Component {...pageProps} />
-            </ProtectedPath>
-          )}
-          <ToastContainer
-            theme="dark"
-            hideProgressBar={true}
-            position="bottom-center"
-            autoClose={1000}
-          />
-        </Chakra>
+        <UserProvider>
+          <Chakra
+            cookies={pageProps.cookies}
+            theme={theme}
+            cssVarsRoot="body"
+          >
+            {publicPaths.includes(route.pathname) ? (
+              <>
+                <CSSReset />
+                <Component {...pageProps} />
+              </>
+            ) : (
+              <ProtectedPath>
+                <CSSReset />
+                <Component {...pageProps} />
+              </ProtectedPath>
+            )}
+            <ToastContainer
+              theme="dark"
+              hideProgressBar={true}
+              position="bottom-center"
+              autoClose={1000}
+            />
+          </Chakra>
+        </UserProvider>
       </PersistGate>
     </Provider>
   );
