@@ -20,31 +20,30 @@ function MyApp({ Component, pageProps }) {
         loading={null}
         persistor={persistor}
       >
-        <UserProvider>
-          <Chakra
-            cookies={pageProps.cookies}
-            theme={theme}
-            cssVarsRoot="body"
-          >
-            {publicPaths.includes(route.pathname) ? (
-              <>
-                <CSSReset />
-                <Component {...pageProps} />
-              </>
-            ) : (
-              <ProtectedPath>
-                <CSSReset />
-                <Component {...pageProps} />
-              </ProtectedPath>
-            )}
-            <ToastContainer
-              theme="dark"
-              hideProgressBar={true}
-              position="bottom-center"
-              autoClose={1000}
-            />
-          </Chakra>
-        </UserProvider>
+        <UserProvider />
+        <Chakra
+          cookies={pageProps.cookies}
+          theme={theme}
+          cssVarsRoot="body"
+        >
+          {publicPaths.includes(route.pathname) ? (
+            <>
+              <CSSReset />
+              <Component {...pageProps} />
+            </>
+          ) : (
+            <ProtectedPath>
+              <CSSReset />
+              <Component {...pageProps} />
+            </ProtectedPath>
+          )}
+          <ToastContainer
+            theme="dark"
+            hideProgressBar={true}
+            position="bottom-center"
+            autoClose={1000}
+          />
+        </Chakra>
       </PersistGate>
     </Provider>
   );

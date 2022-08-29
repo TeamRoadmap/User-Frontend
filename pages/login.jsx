@@ -42,7 +42,7 @@ export default function Login() {
   } = useForm();
 
   useEffect(() => {
-    if (token !== "") {
+    if (token !== "" && token !== undefined) {
       router.push("/dashboard", undefined, { shallow: true });
     }
   }, [token]);
