@@ -9,6 +9,7 @@ import { useRouter } from "next/router";
 import { PersistGate } from "redux-persist/lib/integration/react";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import UserProvider from "../shared/components/user-provider";
 
 function MyApp({ Component, pageProps }) {
   const route = useRouter();
@@ -19,6 +20,7 @@ function MyApp({ Component, pageProps }) {
         loading={null}
         persistor={persistor}
       >
+        <UserProvider />
         <Chakra
           cookies={pageProps.cookies}
           theme={theme}
