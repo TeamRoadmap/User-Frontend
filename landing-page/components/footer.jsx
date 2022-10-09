@@ -8,66 +8,22 @@ import {
   useColorModeValue,
   useBreakpointValue,
 } from "@chakra-ui/react";
-import Link from "next/link";
+import { Link as ChakraLink } from "@chakra-ui/react";
 
 export default function Footer() {
-	const testimonialBg = useColorModeValue("gray.100", "gray.700");
-	return (
+  const testimonialBg = useColorModeValue("gray.100", "gray.700");
+  return (
     <Box bg={testimonialBg}>
       <Flex
         justify={{ base: "center", md: "space-around" }}
-        direction={{ base: "column", md: "row" }}
         align={"center"}
-        mx={"2rem"}
-        py={"4rem"}
-      >
-        <Flex
-          direction={"column"}
-          justify={{ base: "start", md: "center" }}
-          mb={"2rem"}
-        >
-          <Text fontSize={"2xl"}>Ready to get started?</Text>
-          <Text fontSize={"md"}>Sign Up</Text>
-        </Flex>
-        <Flex gap={"1rem"}>
-        <Link href="/signup" passHref>
-          <Button
-            fontSize={"sm"}
-            fontWeight={600}
-            color={"white"}
-            bg={"purple.600"}
-            rounded="8px"
-            href={"#"}
-            _hover={{
-              bg: "purple.800",
-            }}
-          >
-            Sign Up
-          </Button>
-          </Link>
-          {/* <Button
-            as={"a"}
-            fontSize={"sm"}
-            fontWeight={400}
-            borderColor={"purple.500"}
-            variant={"outline"}
-            rounded="8px"
-            href={"#"}
-          >
-            Contact Us
-          </Button> */}
-        </Flex>
-      </Flex>
-      <Flex
-        justify={{ base: "center", md: "space-around" }}
-        align={"center"}
-        direction={{ base: "column-reverse", md: "row" }}
-        gap={{ base: "2rem", md: "1rem" }}
+        direction={"column"}
+        py={"1rem"}
       >
         <Flex
           direction={"row"}
           gap="0.4rem"
-          mb={"2rem"}
+          m={"2rem"}
           align={"center"}
         >
           <Text
@@ -79,9 +35,17 @@ export default function Footer() {
           >
             ROADMAP
           </Text>
-
           <h1>© 2022</h1>
         </Flex>
+        <Text>
+          Created By &nbsp;
+          <ChakraLink
+            color="purple.600"
+            href="https://github.com/TeamRoadmap"
+          >
+            Team Roadmap
+          </ChakraLink>
+        </Text>
       </Flex>
     </Box>
   );
